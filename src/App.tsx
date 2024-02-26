@@ -1,7 +1,13 @@
+import Header from './components/header.tsx';
+import StageSelector from './components/stage-selector.tsx';
+
 function App() {
   return (
-    <div className={"w-full h-full bg-purple-200"}>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+    <div className={'h-full w-full'}>
+      <div className={'mx-[30px] pt-[50px]'}>
+        <Header />
+        <StageSelector />
+      </div>
     </div>
   );
 }
