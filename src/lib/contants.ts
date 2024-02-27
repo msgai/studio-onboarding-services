@@ -14,10 +14,14 @@ export const STAGE_LIST_DATA = {
   [STAGES.APPEARANCE]: {
     title: 'Appearance',
     subtitle: 'Select branding',
+    header: 'How should Netomi look?',
+    subHeader: 'We suggest matching your website to create a unified experience',
   },
   [STAGES.TONE]: {
     title: 'Tone & Persona',
     subtitle: 'Provide details',
+    header: 'How should Netomi interact?',
+    subHeader: 'Set goals for the optimal communication approach',
   },
   [STAGES.SOURCES]: {
     title: 'Sources',
@@ -32,3 +36,7 @@ export const STAGE_LIST_DATA = {
     subtitle: 'Submit interface',
   },
 };
+
+export const COLOR_LIST = ['#AFA4FF', '#E64B32', '#ECB940', '#5DC974', '#2B77F6'];
+
+export const TONE_LIST = ['Friendly', 'Professional'];
