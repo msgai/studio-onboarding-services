@@ -37,7 +37,7 @@ function App() {
         <Header />
         <StageSelector />
         <StageForm />
-        <div className={'absolute left-0 top-0 z-50 h-full w-full blur-3xl'}>&nbsp;</div>
+        {/*<div className={'absolute left-0 top-0 z-50 h-full w-full blur-3xl'}>&nbsp;</div>*/}
       </div>
       <div className={'bg- flex w-[520px] items-center justify-center bg-neutral-200'}>
         <ChatWidgetModel />
