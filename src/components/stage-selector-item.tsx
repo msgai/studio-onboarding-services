@@ -26,7 +26,7 @@ export default function StageSelectorItem({ stage, isCompleted }: Props) {
   return (
     <div className={'w-full'}>
       <div className={'relative flex items-center gap-[3px]'}>
-        <div className={'absolute right-[] top-[0px] h-[0.5px] w-[50px] bg-white'}>&nbsp;</div>
+        {!isFirstStage && <div className={'absolute right-[] top-[0px] h-[0.5px] w-[50px] bg-white'}>&nbsp;</div>}
         <div
           className={clsx([
             'absolute left-[50px] top-[-3px] z-10 h-[6px] w-[6px] shrink-0 overflow-hidden rounded-full',
@@ -35,7 +35,7 @@ export default function StageSelectorItem({ stage, isCompleted }: Props) {
         >
           &nbsp;
         </div>
-        <div className={'absolute left-[57px] right-[10px] h-[0.5px] w-full bg-white'}>&nbsp;</div>
+        {!isLastStage && <div className={'absolute left-[57px] right-[10px] h-[0.5px] w-full bg-white'}>&nbsp;</div>}
       </div>
       <div className={'relative w-[111px] cursor-pointer truncate text-center'} onClick={onClickHandler}>
         <div

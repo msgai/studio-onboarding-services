@@ -6,7 +6,7 @@ import ChatWidgetModel from '@/components/chat-widget-model.tsx';
 function App() {
   return (
     <div className={'flex h-full w-full flex-nowrap'}>
-      <div className={'mx-[30px] flex-grow overflow-hidden pt-[50px]'}>
+      <div className={'mx-[30px] flex-grow overflow-hidden overflow-y-auto pb-[30px] pt-[50px]'}>
         <Header />
         <StageSelector />
         <StageForm />

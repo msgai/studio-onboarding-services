@@ -6,7 +6,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   build: {
-    assetsDir: 'onboarding_static',
+    assetsDir: 'static',
   },
   resolve: {
     alias: {

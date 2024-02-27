@@ -6,6 +6,7 @@
   "author": {
     "name": "Manohar Kumar"
   },
+  "proxy": "http://localhost:5173/",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
