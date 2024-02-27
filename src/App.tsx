@@ -8,10 +8,11 @@ import { STAGE_LIST } from '@/lib/contants.ts';
 import useAppStore from '@/store/appStore.ts';
 import Spinner from '@/components/atoms/spinner.tsx';
 import { getChatWidgetDetails } from '@/services/chatWidget.ts';
+import { getSocialConfig } from '@/services/app.ts';
 
 function App() {
   const [currentStage, setCurrentStage] = useState(STAGE_LIST[0]);
-  const { setStage } = useAppStore((state) => state);
+  const { setStage, setSocialConfig } = useAppStore((state) => state);
   const [botDetails, setBotDetails] = useState(null);
 
   async function fetchBotDetails() {
@@ -25,17 +26,20 @@ function App() {
       setCurrentStage(STAGE_LIST[onboardingStageIndex || 0]);
     }
     console.log('Bot details:', botDetails);
-
-    const chatWidgetDetails = await getChatWidgetDetails(botId);
-    console.log('Chat widget details:', chatWidgetDetails);
   }
 
   useEffect(() => {
     setStage({ currentStage });
   }, [currentStage]);
 
+  async function fetchSocialConfig() {
+    const response = await getSocialConfig();
+    setSocialConfig({ socialConfig: response });
+  }
+
   useEffect(() => {
     fetchBotDetails();
+    fetchSocialConfig();
   }, []);
 
   return (
