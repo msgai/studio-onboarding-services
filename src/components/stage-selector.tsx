@@ -6,7 +6,7 @@ export default function StageSelector() {
     <div className={'flex w-full'}>
       {STAGE_LIST.map((stage) => {
         return (
-          <div className={'w-full'}>
+          <div className={'w-full'} key={stage}>
             <StageSelectorItem stage={stage} isCompleted={false} />
           </div>
         );
