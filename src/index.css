@@ -15,9 +15,3 @@ body {
   height: 100vh;
   width: 100%;
 }
-.pt_5 {
-  @apply pt-5
-}
-.pb_6 {
-  @apply pb-6
-}
