@@ -1,7 +1,7 @@
 import Input from '@/components/atoms/Input.tsx';
 import ColorPicker from '@/components/atoms/color-picker.tsx';
 import React, { useState } from 'react';
-import IconUploader from '@/components/atoms/icon-uploader.tsx';
+import IconUploader from '@/components/atoms/file-uploader';
 import ToneSelector from '@/components/atoms/tone-selector.tsx';
 import { TONE_LIST } from '@/lib/contants.ts';
 
