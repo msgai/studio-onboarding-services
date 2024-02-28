@@ -1,7 +1,7 @@
 import Input from '@/components/atoms/Input.tsx';
 import ColorPicker from '@/components/atoms/color-picker.tsx';
 import React, { useEffect, useState } from 'react';
-import IconUploader from '@/components/atoms/icon-uploader.tsx';
+import FileUploader from '@/components/atoms/file-uploader';
 import { getConfig, getSocialConfig } from '@/services/app.ts';
 import { getChatWidgetDetails } from '@/services/chatWidget.ts';
 import useAppStore from '@/store/appStore.ts';
@@ -47,7 +47,15 @@ export default function StageFormAppearance() {
       fetchChatWidgetConfig();
     }
   }, [chatWidgetAppEnv, socialConfig]);
-
+  let botId = localStorage.getItem('currentBotId') || '5fe5fd10-c110-4f48-b950-82e85edac81e'
+  const uploadKeyPrefix = `CHAT-WIDGET/${botId}/logoImage`
+  const kbKeyPrefix = `SETTINGS/KBANSAI/SOURCES/${botId}/`
+  const validateFile = async (fileObj:any) => {
+    console.log(fileObj.size)
+    if (fileObj.size > 1024 * 1024 * 2) {
+      throw new Error('File size greater than 2mb')
+    }
+  }
   return (
     <div className={'w-full'}>
       <div>
@@ -67,7 +75,7 @@ export default function StageFormAppearance() {
       </div>
       <div className={'mt-[30px]'}>
         <div className="mb-[10px] text-lg font-bold leading-none text-white">Upload Logo</div>
-        <IconUploader value={iconUrl} onChange={(url:any)=>setIconUrl(url)}/>
+        <FileUploader value={iconUrl}  validateFile={validateFile} showIcon uploadKeyPrefix={uploadKeyPrefix} description='IMG, JPG, JPEG format, up to 2MB' onChange={(url:any)=>setIconUrl(url)}/>
       </div>
       <div className={'mt-[50px] flex justify-end'}>
         <button

@@ -3,7 +3,12 @@ import {getPreSignedURL} from '../../services/upload'
 import Spinner from './spinner';
 export interface OwnProps {
   value?: string;
-  onChange?:Function
+  onChange?:Function,
+  validateFile?:Function,
+  description?: string,
+  accept?: string,
+  uploadKeyPrefix?: string,
+  showIcon?: boolean
 }
 
 type Props = OwnProps;
@@ -18,34 +23,47 @@ type Props = OwnProps;
     })
   }
 
-const IconUploader: FunctionComponent<Props> = ({ value, onChange }) => {
+const FileUploader: FunctionComponent<Props> = ({ value, onChange,accept,uploadKeyPrefix, description, validateFile, showIcon}) => {
   const [loading, setLoading] = useState(false)
-  // const [file, setFile] = useState(null)
+  const [file, setFile] = useState(null)
+  const[error, setError] = useState(null)
   // const [value, onChange] = useState(value)
   const ref = useRef(null)
   const loadFile = async (event: any) =>{
     console.log(event, event.target.files)
-    if(!event.target.files || event.target.files.length === 0) return
-    setLoading(true)
-    let botId = localStorage.getItem('currentBotId') || '5fe5fd10-c110-4f48-b950-82e85edac81e'
-    let url = await getPreSignedURL(event.target.files[0],`CHAT-WIDGET/${botId}/logoImage`)
-    console.log(url)
-    onChange(url)
-    setLoading(false)
+    setError(null)
+    try {
+      if(!event.target.files || event.target.files.length === 0) return
+      setLoading(true)
+      await validateFile(event.target.files[0])
+      let url = await getPreSignedURL(event.target.files[0], uploadKeyPrefix)
+      setFile(event.target.files[0].name)
+      console.log(url)
+      onChange(url)
+    } catch (e) {
+      setError(e)
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }
   const onButtonClick= ()=>{
-    if(value) onChange(null)
+    if(value) {
+      onChange(null)
+      setFile(null)
+    }
     else ref.current.click()
   }
   let compLeft;
   if(loading){
     compLeft = <Spinner/>
   } else if(value){
-    compLeft = <img height={50} width={50} src={value}/>
+    if(showIcon) compLeft = <img height={50} width={50} src={value}/>
+    else compLeft = <div className='break-all	'>{file}</div>
   } else {
     compLeft = <div>
     <p className="text-base font-normal text-neutral-400">Choose a file or drag & drop it here</p>
-    <p className="text-xs font-normal text-gray-400">IMG, JPG, JPEG format, up to 2MB</p>
+    <p className="text-xs font-normal text-gray-400">{description}</p>
     </div>
   }
   return (<div className="rounded-lg bg-white p-[24px]">
@@ -58,15 +76,16 @@ const IconUploader: FunctionComponent<Props> = ({ value, onChange }) => {
       </div>
       <button
             className={
-              'flex h-[45px] w-[135px] items-center justify-center rounded-full bg-indigo-700 text-sm text-white'
+              'flex h-[45px] shrink-0	 w-[135px] items-center justify-center rounded-full bg-indigo-700 text-sm text-white'
             }
             onClick={onButtonClick}
           >
             {value ? 'Delete File' : 'Browse File'}
           </button>
-      <input ref={ref} onChange={loadFile} id="dropzone-file" type="file" className="hidden" />
+      <input ref={ref} onChange={loadFile} accept={accept} id="dropzone-file" type="file" className="hidden" />
   </label>
+  {error && <div className='text-red-500'>{error.message}</div>}
 </div> )
 };
 
-export default IconUploader;
+export default FileUploader;
