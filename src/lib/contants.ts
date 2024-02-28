@@ -26,14 +26,20 @@ export const STAGE_LIST_DATA = {
   [STAGES.SOURCES]: {
     title: 'Sources',
     subtitle: 'Add files',
+    header: '',
+    subHeader: '',
   },
   [STAGES.FALLBACK]: {
     title: 'Fall Back',
     subtitle: 'Curate error messages',
+    header: '',
+    subHeader: '',
   },
   [STAGES.TEST]: {
     title: 'Test',
     subtitle: 'Submit interface',
+    header: '',
+    subHeader: '',
   },
 };
 

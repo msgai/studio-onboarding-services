@@ -31,7 +31,7 @@ function App() {
       const payload = $botDetails.payload;
       setBotDetails(payload);
       const properties = payload.properties;
-      const onboardingStageIndex = parseInt(properties['ONBOARDING_STAGE']);
+      const onboardingStageIndex = parseInt(properties['ONBOARDING_STAGE'].value);
       setStage(STAGE_LIST[onboardingStageIndex || 0]);
     }
   }
@@ -89,12 +89,12 @@ function App() {
     <>
       {botDetails && (
         <div className={'flex h-full w-full flex-nowrap'}>
-          <div className={'relative mx-[30px] flex-grow overflow-y-auto pb-[30px] pt-[50px]'}>
+          <div className={'relative mx-[30px] flex-grow  overflow-y-auto pb-[30px] pt-[50px]'}>
             <Header />
             <StageSelector />
             <StageForm />
           </div>
-          <div className={'flex w-[520px] justify-center bg-neutral-200 pt-[50px]'}>
+          <div className={'flex w-[520px] justify-center overflow-hidden bg-neutral-200 pt-[50px]'}>
             <ChatWidgetModel />
           </div>
         </div>

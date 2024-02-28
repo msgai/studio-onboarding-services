@@ -6,10 +6,12 @@ import { getConfig, getSocialConfig } from '@/services/app.ts';
 import { getChatWidgetDetails, invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWidget.ts';
 import useAppStore from '@/store/appStore.ts';
 import useFormStore from '@/store/formStore.ts';
+import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
+import { updateStage } from '@/services/bots.ts';
 
 export default function StageFormAppearance() {
   const { greetingPrompt, setGreetingPrompt, color, setColor, logoUrl, setLogoUrl } = useFormStore((state) => state);
-  const { chatWidgetConfig, chatWidgetAppEnv, botRefIdStaging } = useAppStore();
+  const { chatWidgetConfig, chatWidgetAppEnv, botRefIdStaging, botDetails, setStage } = useAppStore();
   function onColorUpdate(value: string) {
     setColor(value);
   }
@@ -26,7 +28,14 @@ export default function StageFormAppearance() {
       payloadString: payloadString,
     });
     await invalidateCloudfront({ env: chatWidgetAppEnv, botRefId: botRefIdStaging });
-    console.log('response', response);
+    const payload = await updateStage({
+      stage: STAGES.APPEARANCE,
+      botDetails: botDetails,
+    });
+    if (payload?.statusCode === 'SUCCESS') {
+      setStage(STAGE_LIST[STAGE_LIST.indexOf(STAGES.APPEARANCE) + 1]);
+    }
+    console.log('payload ===>', payload);
   }
 
   useEffect(() => {

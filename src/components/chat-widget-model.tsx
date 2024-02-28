@@ -24,7 +24,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
   });
 
   return (
-    <div className={'h-[699px] w-[419px] rounded-[20px] bg-white'}>
+    <div className={'h-[699px] w-[419px] scale-[.85] overflow-auto rounded-[20px] bg-white'}>
       <div
         className={
           'chat-widget-header flex items-center justify-between rounded-tl-[20px] rounded-tr-[20px] px-[30px] py-[16px] text-white'
