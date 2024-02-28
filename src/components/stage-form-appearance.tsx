@@ -9,6 +9,7 @@ import useFormStore from '@/store/formStore.ts';
 
 export default function StageFormAppearance() {
   const [chatWidgetAppEnv, setChatWidgetAppEnv] = useState(null);
+  const [iconUrl, setIconUrl] = useState(null);
   const [chatWidgetCdnUrl, setChatWidgetCdnUrl] = useState(null);
   const { socialConfig } = useAppStore((state) => state);
   const { greetingPrompt, setGreetingPrompt, color, setColor } = useFormStore((state) => state);
@@ -66,7 +67,7 @@ export default function StageFormAppearance() {
       </div>
       <div className={'mt-[30px]'}>
         <div className="mb-[10px] text-lg font-bold leading-none text-white">Upload Logo</div>
-        <IconUploader />
+        <IconUploader value={iconUrl} onChange={(url:any)=>setIconUrl(url)}/>
       </div>
       <div className={'mt-[50px] flex justify-end'}>
         <button
