@@ -20,7 +20,7 @@ export default function StageSelectorItem({ stage, isCompleted }: Props) {
   }, [isCompleted, currentStage]);
 
   function onClickHandler() {
-    setStage({ currentStage: stage });
+    setStage(stage);
   }
 
   return (

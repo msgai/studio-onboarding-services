@@ -7,3 +7,13 @@ export function getUserIdFromLocalStorage() {
     console.error(error);
   }
 }
+
+export function getUserEmailFromLocalStorage() {
+  try {
+    if (localStorage.getItem('user')) {
+      return JSON.parse(localStorage.getItem('user'))?.email;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}

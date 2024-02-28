@@ -3,50 +3,39 @@ import ColorPicker from '@/components/atoms/color-picker.tsx';
 import React, { useEffect, useState } from 'react';
 import IconUploader from '@/components/atoms/icon-uploader.tsx';
 import { getConfig, getSocialConfig } from '@/services/app.ts';
-import { getChatWidgetDetails } from '@/services/chatWidget.ts';
+import { getChatWidgetDetails, invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWidget.ts';
 import useAppStore from '@/store/appStore.ts';
 import useFormStore from '@/store/formStore.ts';
 
 export default function StageFormAppearance() {
-  const [chatWidgetAppEnv, setChatWidgetAppEnv] = useState(null);
-  const [iconUrl, setIconUrl] = useState(null);
-  const [chatWidgetCdnUrl, setChatWidgetCdnUrl] = useState(null);
-  const { socialConfig } = useAppStore((state) => state);
-  const { greetingPrompt, setGreetingPrompt, color, setColor } = useFormStore((state) => state);
+  const { greetingPrompt, setGreetingPrompt, color, setColor, logoUrl, setLogoUrl } = useFormStore((state) => state);
+  const { chatWidgetConfig, chatWidgetAppEnv, botRefIdStaging } = useAppStore();
   function onColorUpdate(value: string) {
     setColor(value);
   }
 
-  function handleFormSubmit() {
-    console.log('Form Submitted');
-  }
-
-  async function fetchConfig() {
-    const response = await getConfig('CHAT_WIDGET_APP_ENV');
-    const response2 = await getConfig('CHAT_WIDGET_CDN_URL');
-    setChatWidgetAppEnv(response?.CHAT_WIDGET_APP_ENV);
-    setChatWidgetCdnUrl(response2);
-    console.log('chatWidgetAppEnv', response);
-    console.log('chatWidgetCdnUrl', response2);
-  }
-
-  async function fetchChatWidgetConfig() {
-    const response = await getChatWidgetDetails({
+  async function handleFormSubmit() {
+    const chatWidgetConfigCopy = JSON.parse(JSON.stringify(chatWidgetConfig));
+    chatWidgetConfigCopy.initialFlows.header = greetingPrompt;
+    chatWidgetConfigCopy.theme.color = color;
+    chatWidgetConfigCopy.logoImage = logoUrl;
+    const payloadString = JSON.stringify(chatWidgetConfigCopy);
+    const response = await updateChatWidgetDetails({
       env: chatWidgetAppEnv,
-      botRefId: socialConfig?.botRefId,
+      botRefId: botRefIdStaging,
+      payloadString: payloadString,
     });
-    console.log('chatWidgetConfig', response);
+    await invalidateCloudfront({ env: chatWidgetAppEnv, botRefId: botRefIdStaging });
+    console.log('response', response);
   }
 
   useEffect(() => {
-    fetchConfig();
-  }, []);
-
-  useEffect(() => {
-    if (chatWidgetAppEnv && socialConfig) {
-      fetchChatWidgetConfig();
+    if (chatWidgetConfig) {
+      setGreetingPrompt(chatWidgetConfig.initialFlows?.header);
+      setColor(chatWidgetConfig.theme?.color);
+      setLogoUrl(chatWidgetConfig.logoImage);
     }
-  }, [chatWidgetAppEnv, socialConfig]);
+  }, [chatWidgetConfig]);
 
   return (
     <div className={'w-full'}>
@@ -56,7 +45,6 @@ export default function StageFormAppearance() {
           placeholder={'Welcome to {Company Chat Bot Name} customer support! How can I assist you today?'}
           value={greetingPrompt}
           onChange={(e) => {
-            console.log(e.target.value);
             setGreetingPrompt(e.target.value);
           }}
         />
@@ -67,7 +55,7 @@ export default function StageFormAppearance() {
       </div>
       <div className={'mt-[30px]'}>
         <div className="mb-[10px] text-lg font-bold leading-none text-white">Upload Logo</div>
-        <IconUploader value={iconUrl} onChange={(url:any)=>setIconUrl(url)}/>
+        <IconUploader value={logoUrl} onChange={(url: any) => setLogoUrl(url)} />
       </div>
       <div className={'mt-[50px] flex justify-end'}>
         <button

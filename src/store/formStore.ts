@@ -5,6 +5,8 @@ import { COLOR_LIST } from '@/lib/contants.ts';
 interface FormState {
   greetingPrompt: string;
   color: string;
+  logoUrl: string;
+  setLogoUrl: (data: string) => void;
   setColor: (data: string) => void;
   setGreetingPrompt: (data: string) => void;
 }
@@ -13,8 +15,14 @@ const useFormStore = create<FormState>()(
   devtools(
     // persist(
     (set) => ({
-      greetingPrompt: 'sdfsdfs',
-      color: COLOR_LIST[0],
+      greetingPrompt: '',
+      color: COLOR_LIST[1],
+      logoUrl: '',
+      setLogoUrl: (data: string) => {
+        set({
+          logoUrl: data,
+        });
+      },
       setColor: (data: string) => {
         set({
           color: data,

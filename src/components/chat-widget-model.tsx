@@ -15,11 +15,12 @@ export interface OwnProps {
 
 type Props = OwnProps;
 
+const DEFAULT_GREETING = 'Hello! Welcome to AeroSkyline Airlines customer support. How can I assist you today?';
+
 const ChatWidgetModel: FunctionComponent<Props> = () => {
-  const { greetingPrompt } = useFormStore((state) => state);
+  const { greetingPrompt, color, logoUrl } = useFormStore((state) => state);
   const [config, setConfig] = useState({
     botName: 'Aeroskyline Chat Bot Name',
-    color: '#E64B32',
   });
 
   return (
@@ -28,13 +29,13 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
         className={
           'chat-widget-header flex items-center justify-between rounded-tl-[20px] rounded-tr-[20px] px-[30px] py-[16px] text-white'
         }
-        style={{ backgroundColor: config.color }}
+        style={{ backgroundColor: color }}
       >
         <div className={'mr-[24px]'}>
           <img src={verticalEllipsisIcon} />
         </div>
         <div className={'mr-[10px] w-[32px]'}>
-          <img src={deleteIcon} />
+          <img src={logoUrl} />
         </div>
         <div className={'mr-[10px] w-[216px] overflow-hidden overflow-ellipsis whitespace-nowrap'}>
           {config.botName}
@@ -49,24 +50,18 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
 
       <div className={'chat-widget-content relative mt-[-64px] h-full px-[16px] pt-[180px]'}>
         <div className={'chat-widget-body flex flex-col gap-y-[16px]'}>
-          <div
-            className="self-end rounded-[15px] px-[20px] py-[12px] text-white"
-            style={{ backgroundColor: config.color }}
-          >
+          <div className="self-end rounded-[15px] px-[20px] py-[12px] text-white" style={{ backgroundColor: color }}>
             Hi
           </div>
           <div className={'flex'}>
             <div className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}>
               <img src={starIcon} />
             </div>
-            <div className="w-[320px] self-start overflow-hidden rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pl-[16px] pr-[30px] text-black">
-              {greetingPrompt}
+            <div className="w-[320px] overflow-hidden rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pr-[30px] text-black">
+              {greetingPrompt || DEFAULT_GREETING}
             </div>
           </div>
-          <div
-            className="self-end rounded-[15px] px-[20px] py-[12px] text-white"
-            style={{ backgroundColor: config.color }}
-          >
+          <div className="self-end rounded-[15px] px-[20px] py-[12px] text-white" style={{ backgroundColor: color }}>
             I need help with my flight?
           </div>
           <div className={'flex'}>
@@ -74,7 +69,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
               <img src={starIcon} />
             </div>
             <div>
-              <div className="w-[320px] self-start rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pl-[16px] pr-[30px] text-black">
+              <div className="w-[320px] self-start rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pr-[30px] text-black">
                 Sure, I can help with your flight related questions.
               </div>
               <div className="pt-[6px] text-gray-700">Bot name. 7:28 PM</div>
