@@ -10,7 +10,7 @@ interface Props {
 
 export default function StageSelectorItem({ stage, isCompleted }: Props) {
   const [isSelected, setIsSelected] = useState(false);
-  const { currentStage, setStage } = useAppStore((state) => state);
+  const { currentStage } = useAppStore((state) => state);
   const stageData = STAGE_LIST_DATA[stage];
   const isFirstStage = FIRST_STAGE === stage;
   const isLastStage = STAGES.TEST === stage;
@@ -19,12 +19,8 @@ export default function StageSelectorItem({ stage, isCompleted }: Props) {
     setIsSelected(isCompleted || currentStage === stage);
   }, [isCompleted, currentStage]);
 
-  function onClickHandler() {
-    setStage(stage);
-  }
-
   return (
-    <div className={'w-full'}>
+    <div className={'w-full select-none'}>
       <div className={'relative flex items-center gap-[3px]'}>
         {!isFirstStage && <div className={'absolute right-[] top-[0px] h-[0.5px] w-[50px] bg-white'}>&nbsp;</div>}
         <div
@@ -37,7 +33,7 @@ export default function StageSelectorItem({ stage, isCompleted }: Props) {
         </div>
         {!isLastStage && <div className={'absolute left-[57px] right-[10px] h-[0.5px] w-full bg-white'}>&nbsp;</div>}
       </div>
-      <div className={'relative w-[111px] cursor-pointer truncate text-center'} onClick={onClickHandler}>
+      <div className={'relative w-[111px] truncate text-center'}>
         <div
           className={clsx([
             'mb-[2px] mt-[6px] h-[17px]  text-sm font-normal leading-none text-white',
