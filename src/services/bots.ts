@@ -40,7 +40,7 @@ export async function updateStage({ stage, botDetails }: { stage: STAGES; botDet
   return await response.json();
 }
 
-export async function finishOnboarding({ botDetails }: { stage: STAGES; botDetails: any }) {
+export async function finishOnboarding({ botDetails }: { botDetails: any }) {
   const botId = getCurrentBotId();
   const properties = botDetails?.properties;
   properties['IS_ONBOARDING_COMPLETE'] = {

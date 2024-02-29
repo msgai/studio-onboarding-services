@@ -3,7 +3,7 @@ import StageSelectorItem from '@/components/stage-selector-item.tsx';
 
 export default function StageSelector() {
   return (
-    <div className={'flex w-full'}>
+    <div className={'ml-4 mt-5 flex w-full items-center'}>
       {STAGE_LIST.map((stage) => {
         return (
           <div className={'w-full'} key={stage}>

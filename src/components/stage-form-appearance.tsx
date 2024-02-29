@@ -6,7 +6,7 @@ import { getConfig, getSocialConfig } from '@/services/app.ts';
 import { getChatWidgetDetails, invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWidget.ts';
 import useAppStore from '@/store/appStore.ts';
 import useFormStore from '@/store/formStore.ts';
-import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
+import { COLOR_LIST, STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import { updateStage } from '@/services/bots.ts';
 import { getCurrentBotId } from '@/lib/utils.ts';
 
@@ -42,7 +42,7 @@ export default function StageFormAppearance() {
   useEffect(() => {
     if (chatWidgetConfig) {
       setGreetingPrompt(chatWidgetConfig.initialFlows?.header);
-      setColor(chatWidgetConfig.theme?.color);
+      setColor(chatWidgetConfig.theme?.color || COLOR_LIST[1]);
       setLogoUrl(chatWidgetConfig.logoImage);
     }
   }, [chatWidgetAppEnv]);
@@ -58,32 +58,32 @@ export default function StageFormAppearance() {
   };
   return (
     <div className={'w-full'}>
-      <div className='h-full pb-[50px]'>
-      <div>
-        <div className="mb-[10px] text-lg font-bold leading-none text-white">Greeting Prompt</div>
-        <Input
-          placeholder={'Welcome to {Company Chat Bot Name} customer support! How can I assist you today?'}
-          value={greetingPrompt}
-          onChange={(e) => {
-            setGreetingPrompt(e.target.value);
-          }}
-        />
-      </div>
-      <div className={'mt-[30px]'}>
-        <div className="mb-[10px] text-lg font-bold leading-none text-white">Select color</div>
-        <ColorPicker value={color} onChange={onColorUpdate} />
-      </div>
-      <div className={'mt-[30px]'}>
-        <div className="mb-[10px] text-lg font-bold leading-none text-white">Upload Logo</div>
-        <FileUploader
-          value={logoUrl}
-          validateFile={validateFile}
-          showIcon
-          uploadKeyPrefix={uploadKeyPrefix}
-          description="IMG, JPG, JPEG format, up to 2MB"
-          onChange={(url: any) => setLogoUrl(url)}
-        />
-      </div>
+      <div className="h-full pb-[50px]">
+        <div>
+          <div className="mb-[10px] text-lg font-bold leading-none text-white">Greeting Prompt</div>
+          <Input
+            placeholder={'Welcome to {Company Chat Bot Name} customer support! How can I assist you today?'}
+            value={greetingPrompt}
+            onChange={(e) => {
+              setGreetingPrompt(e.target.value);
+            }}
+          />
+        </div>
+        <div className={'mt-[30px]'}>
+          <div className="mb-[10px] text-lg font-bold leading-none text-white">Select color</div>
+          <ColorPicker value={color} onChange={onColorUpdate} />
+        </div>
+        <div className={'mt-[30px]'}>
+          <div className="mb-[10px] text-lg font-bold leading-none text-white">Upload Logo</div>
+          <FileUploader
+            value={logoUrl}
+            validateFile={validateFile}
+            showIcon
+            uploadKeyPrefix={uploadKeyPrefix}
+            description="IMG, JPG, JPEG format, up to 2MB"
+            onChange={(url: any) => setLogoUrl(url)}
+          />
+        </div>
       </div>
       <div className={'mr-[90px] mt-[50px] flex scale-[1.25] justify-end'}>
         <button

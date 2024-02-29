@@ -38,7 +38,7 @@ function App() {
       setBotDetails(payload);
       const properties = payload.properties;
       const onboardingStageIndex = parseInt(properties['ONBOARDING_STAGE']?.value);
-      setStage(STAGE_LIST[2]);
+      setStage(STAGE_LIST[onboardingStageIndex || 0]);
     }
   }
 
@@ -101,7 +101,7 @@ function App() {
   }, [chatWidgetAppEnv, botRefIdStaging]);
 
   useEffect(() => {
-    if (chatWidgetConfig) {
+    if (chatWidgetConfig && botDetails && aiAgentPersona) {
       setGreetingPrompt(chatWidgetConfig.initialFlows?.header);
       setColor(chatWidgetConfig.theme?.color);
       setLogoUrl(chatWidgetConfig.logoImage);
@@ -116,7 +116,7 @@ function App() {
       const properties = botDetails.properties;
       const isOnboardingComplete = properties['IS_ONBOARDING_COMPLETE']?.value;
       if (isOnboardingComplete === 'true') {
-        window.location.href = '/';
+        // window.location.href = '/';
       }
     }
   }, [botDetails]);
@@ -125,8 +125,8 @@ function App() {
     <>
       {!loading && (
         <div className={'relative flex h-[100vh] w-full flex-nowrap overflow-hidden'}>
-          <div className={'flex-grow flex flex-col'}>
-            <div className="items-center mx-[30px] pt-[30px]">
+          <div className={'flex flex-grow flex-col'}>
+            <div className="mx-[30px] items-center pt-[30px]">
               <Header />
               <StageSelector />
             </div>

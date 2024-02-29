@@ -26,20 +26,20 @@ export const STAGE_LIST_DATA = {
   [STAGES.SOURCES]: {
     title: 'Sources',
     subtitle: 'Add files',
-    header: '',
-    subHeader: '',
+    header: 'How should Netomi interact?',
+    subHeader: 'Set goals for the optimal communication approach',
   },
   [STAGES.FALLBACK]: {
     title: 'Fall Back',
     subtitle: 'Curate error messages',
-    header: '',
-    subHeader: '',
+    header: 'How should Netomi interact?',
+    subHeader: 'Set goals for the optimal communication approach',
   },
   [STAGES.TEST]: {
     title: 'Test',
     subtitle: 'Submit interface',
-    header: '',
-    subHeader: '',
+    header: 'How should Netomi interact?',
+    subHeader: 'Set goals for the optimal communication approach',
   },
 };
 

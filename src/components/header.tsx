@@ -1,11 +1,11 @@
-import netomiIcon from '../assets/netomi_logo.svg'
+import netomiIcon from '../assets/netomi_logo.svg';
 
 export default function Header() {
   return (
-    <div className={'mb-[45px] select-none'}>
-      <h1 className="text-[50px] font-normal text-white">
-        <img src ={netomiIcon}/>
-      </h1>
+    <div className={'flex w-[70px] select-none items-center justify-center'}>
+      {/*<h1 className="text-[50px] font-normal text-white">*/}
+      <img className={'h-full w-full'} src={netomiIcon} />
+      {/*</h1>*/}
     </div>
   );
 }
