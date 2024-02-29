@@ -45,13 +45,13 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
       </div>
 
       <div className={'chat-widget-content relative mt-[-64px] h-full px-[16px] pt-[180px]'}>
-        <div className={'chat-widget-body mt-[60px] flex flex-col gap-y-[16px]'}>
+        <div className={'chat-widget-body mt-[90px] flex flex-col gap-y-[16px]'}>
           <div className={'flex'}>
             <div
               style={{ backgroundColor: color }}
               className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}
             >
-              <img className="h-[13.6px] w-[13.6px]" src={logoUrl || defaultLogo} />
+              <img className="h-[13.6px] w-[13.6px]" src={logoUrl || defaultLogo} style={{ backgroundColor: color }} />
             </div>
             <div className="w-[320px] overflow-hidden rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pr-[30px] text-black">
               {greetingPrompt || DEFAULT_GREETING}
@@ -65,7 +65,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
               style={{ backgroundColor: color }}
               className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}
             >
-              <img src={logoUrl || defaultLogo} />
+              <img className="h-[13.6px] w-[13.6px]" src={logoUrl || defaultLogo} style={{ backgroundColor: color }} />
             </div>
             <div>
               <div className="w-[320px] self-start rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pr-[30px] text-black">
