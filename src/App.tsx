@@ -38,7 +38,7 @@ function App() {
       setBotDetails(payload);
       const properties = payload.properties;
       const onboardingStageIndex = parseInt(properties['ONBOARDING_STAGE']?.value);
-      setStage(STAGE_LIST[onboardingStageIndex || 0]);
+      setStage(STAGE_LIST[2]);
     }
   }
 
@@ -125,12 +125,12 @@ function App() {
     <>
       {!loading && (
         <div className={'relative flex h-[100vh] w-full flex-nowrap overflow-hidden'}>
-          <div className={'mx-[30px] flex-grow pb-[30px] pt-[30px]'}>
-            <div className="flex h-[50px] items-center">
+          <div className={'flex-grow flex flex-col'}>
+            <div className="items-center mx-[30px] pt-[30px]">
               <Header />
               <StageSelector />
             </div>
-            <div className="h-[60%] scale-[0.85]">
+            <div className="scale-[0.85] overflow-y-auto">
               <StageForm />
             </div>
           </div>
