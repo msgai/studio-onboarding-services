@@ -16,11 +16,22 @@ export default function StageFormTone() {
   const[sources,updateSources] =useState([])
   const[loading,setLoading] =useState(true)
   const[overlayLoading,setOverlayLoading] =useState(false)
-  
+  const { setStage, botDetails } = useAppStore();
+
+  async function updateStageData() {
+    const payload = await updateStage({
+      stage: STAGES.TONE,
+      botDetails: botDetails,
+    });
+    if (payload?.statusCode === 'SUCCESS') {
+      setStage(STAGE_LIST[STAGE_LIST.indexOf(STAGES.TONE) + 1]);
+    }
+  }
+
   async function handleFormSubmit() {
     // const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
     // await promise;
-    // await updateStageData();
+    await updateStageData();
   }
   async function onDelete(source:any) {
     try{
