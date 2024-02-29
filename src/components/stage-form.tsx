@@ -8,9 +8,9 @@ export default function StageForm() {
   const currentStage = useAppStore((state) => state.currentStage);
 
   return (
-    <div className={'mt-[60px] w-full'}>
+    <div className={'mt-[10px] w-full'}>
       <StageFormHeader />
-      <div className={'mt-[50px]'}>
+      <div className={'mt-[20px]'}>
         {currentStage === STAGES.APPEARANCE && <StageFormAppearance />}
         {currentStage === STAGES.TONE && <StageFormTone />}
       </div>
