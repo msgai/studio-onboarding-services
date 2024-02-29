@@ -35,7 +35,7 @@ function Table({ data, onDelete }: Props) {
                             {item.sourceName}
                         </th>
                         <td className="px-6 py-4">
-                            {item.subType.toLowerCase().split('_').map(d=>d[0].toUpperCase()+d.substring(1)).join(' ')}
+                            {item.subType.toLowerCase().split('_').map((d:any)=>d[0].toUpperCase()+d.substring(1)).join(' ')}
                         </td>
                         <td className="px-6 py-4 text-ellipsis ">
                             <a target='__blank' href={item.sourceType=== 'WEB' ?item.webUrl : item.fileUrl} >Click Here</a>
