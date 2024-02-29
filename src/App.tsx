@@ -116,7 +116,7 @@ function App() {
       const properties = botDetails.properties;
       const isOnboardingComplete = properties['IS_ONBOARDING_COMPLETE']?.value;
       if (isOnboardingComplete === 'true') {
-        // window.location.href = '/';
+        window.location.href = '/';
       }
     }
   }, [botDetails]);
@@ -130,7 +130,7 @@ function App() {
               <Header />
               <StageSelector />
             </div>
-            <div className="scale-[0.85] overflow-y-auto">
+            <div className="scale-[0.85]">
               <StageForm />
             </div>
           </div>

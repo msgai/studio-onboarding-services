@@ -2,8 +2,7 @@ import Input from '@/components/atoms/Input.tsx';
 import ColorPicker from '@/components/atoms/color-picker.tsx';
 import React, { useEffect, useState } from 'react';
 import FileUploader from '@/components/atoms/file-uploader';
-import { getConfig, getSocialConfig } from '@/services/app.ts';
-import { getChatWidgetDetails, invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWidget.ts';
+import { invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWidget.ts';
 import useAppStore from '@/store/appStore.ts';
 import useFormStore from '@/store/formStore.ts';
 import { COLOR_LIST, STAGE_LIST, STAGES } from '@/lib/contants.ts';
@@ -23,7 +22,7 @@ export default function StageFormAppearance() {
     chatWidgetConfigCopy.theme.color = color;
     chatWidgetConfigCopy.logoImage = logoUrl;
     const payloadString = JSON.stringify(chatWidgetConfigCopy);
-    const response = await updateChatWidgetDetails({
+    await updateChatWidgetDetails({
       env: chatWidgetAppEnv,
       botRefId: botRefIdStaging,
       payloadString: payloadString,
