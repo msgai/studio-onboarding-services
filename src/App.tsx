@@ -126,7 +126,7 @@ function App() {
       {!loading && (
         <div className={'relative flex h-[100vh] w-full flex-nowrap overflow-hidden'}>
           <div className={'flex flex-grow flex-col'}>
-            <div className="mx-[30px] items-center pt-[30px]">
+            <div className="mx-[30px] flex items-center pt-[30px]">
               <Header />
               <StageSelector />
             </div>
