@@ -15,48 +15,24 @@ export default function StageFormTone() {
   const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone } = useFormStore((state) => state);
   const[sources,updateSources] =useState([])
   const[loading,setLoading] =useState(true)
-  // async function updateChatWidgetData() {
-  //   const chatWidgetConfigCopy = JSON.parse(JSON.stringify(chatWidgetConfig));
-  //   chatWidgetConfigCopy.title = brandName;
-  //   const payloadString = JSON.stringify(chatWidgetConfigCopy);
-  //   await updateChatWidgetDetails({
-  //     env: chatWidgetAppEnv,
-  //     botRefId: botRefIdStaging,
-  //     payloadString: payloadString,
-  //   });
-  //   await invalidateCloudfront({ env: chatWidgetAppEnv, botRefId: botRefIdStaging });
-  // }
-
-  // async function updateToneData() {
-  //   let aiAgentPersonaCopy = JSON.parse(JSON.stringify(aiAgentPersona));
-  //   aiAgentPersonaCopy = {
-  //     ...aiAgentPersonaCopy,
-  //     aiAgentPersonaConfig: {
-  //       ...aiAgentPersonaCopy.aiAgentPersonaConfig,
-  //       communicationTone: {
-  //         ...aiAgentPersonaCopy.aiAgentPersonaConfig?.communicationTone,
-  //         tone: tone,
-  //       },
-  //     },
-  //   };
-  //   const payloadString = JSON.stringify(aiAgentPersonaCopy);
-  //   await updateAiAgentPersona(payloadString);
-  // }
-
-  // async function updateStageData() {
-  //   const payload = await updateStage({
-  //     stage: STAGES.TONE,
-  //     botDetails: botDetails,
-  //   });
-  //   if (payload?.statusCode === 'SUCCESS') {
-  //     setStage(STAGE_LIST[STAGE_LIST.indexOf(STAGES.TONE) + 1]);
-  //   }
-  // }
-
+  const[overlayLoading,setOverlayLoading] =useState(false)
+  
   async function handleFormSubmit() {
     // const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
     // await promise;
     // await updateStageData();
+  }
+  async function onDelete(source:any) {
+    try{
+      setOverlayLoading(true)
+      await answerai.delete(source.sourceId)
+      updateSources(sources.filter(el=>el.sourceId !== source.sourceId))
+      setOverlayLoading(false)
+    } catch(e) {
+      console.error(e);
+      setOverlayLoading(false)
+    }
+    
   }
   useEffect(() => {
     setLoading(true)
@@ -67,8 +43,9 @@ export default function StageFormTone() {
   }, []);
   if(loading) return <Spinner/>
   return (
-    <div className={'w-full'}>
-     <Table data={sources}/>
+    <div className={'w-full relative'}>
+      {overlayLoading &&<div className='absolute h-full w-full opacity-50 bg-gray-700	'><div className='absolute left-[50%] top-[50%]'><Spinner/></div></div>}
+     <Table data={sources} onDelete={onDelete}/>
       <div>
         <div className="mb-[10px] mt-[30px] text-lg font-bold leading-none text-white">Source Name</div>
         <Input

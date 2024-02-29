@@ -2,6 +2,14 @@ import DEFAULT_HEADERS from './setDefaultHeaders';
 // import uuid from 'uuid'
 const _endpoint = '/client/data/source';
 const answerAi = {
+    async delete(id:String){
+        // )
+    let response = await fetch(`/api/resources${_endpoint}/${id}` , {
+        method: 'DELETE',
+        headers: DEFAULT_HEADERS,
+      });
+      return response.json()
+    },
   async getAnswerAiTrainingStatus() {
     // return http.get(
     //   this._buildConfig({ url: `/api/resources${_endpoint}/training/status` })
