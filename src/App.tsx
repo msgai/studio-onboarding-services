@@ -90,10 +90,10 @@ function App() {
 
   return (
     <>
-      {!loading && (
+      {!loading &&(
         <div className={'relative flex h-[100vh] overflow-hidden w-full flex-nowrap'}>
           <div className={'mx-[30px] flex-grow pb-[30px] pt-[30px]'}>
-            <div className='h-[150px]'>
+            <div className='h-[50px] flex items-center'>
               <Header />
               <StageSelector />
             </div>

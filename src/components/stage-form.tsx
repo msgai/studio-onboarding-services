@@ -10,7 +10,7 @@ export default function StageForm() {
   return (
     <div className={'mt-[10px] w-full'}>
       <StageFormHeader />
-      <div className={'mt-[20px]'}>
+      <div className={'mt-[50px]'}>
         {currentStage === STAGES.APPEARANCE && <StageFormAppearance />}
         {currentStage === STAGES.TONE && <StageFormTone />}
       </div>

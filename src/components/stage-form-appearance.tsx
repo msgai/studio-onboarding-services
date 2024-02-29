@@ -57,7 +57,7 @@ export default function StageFormAppearance() {
   };
   return (
     <div className={'w-full'}>
-      <div className='overflow-y-auto h-[350px] pb-[50px]'>
+      <div className='h-full pb-[50px]'>
       <div>
         <div className="mb-[10px] text-lg font-bold leading-none text-white">Greeting Prompt</div>
         <Input
