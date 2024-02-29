@@ -13,11 +13,10 @@ import Spinner from './atoms/spinner';
 
 export default function StageFormSources() {
   const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone } = useFormStore((state) => state);
-  const { botDetails, setStage } = useAppStore();
-
-  const [sources, updateSources] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [overlayLoading, setOverlayLoading] = useState(false);
+  const[sources,updateSources] =useState([])
+  const[loading,setLoading] =useState(true)
+  const[overlayLoading,setOverlayLoading] =useState(false)
+  const { setStage, botDetails } = useAppStore();
 
   async function updateStageData() {
     const payload = await updateStage({
@@ -28,6 +27,7 @@ export default function StageFormSources() {
       setStage(STAGE_LIST[STAGE_LIST.indexOf(STAGES.SOURCES) + 1]);
     }
   }
+
   async function handleFormSubmit() {
     // const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
     // await promise;
