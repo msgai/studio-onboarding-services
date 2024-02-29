@@ -47,7 +47,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
         <div className={'chat-widget-body mt-[60px] flex flex-col gap-y-[16px]'}>
           <div className={'flex'}>
             <div className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}>
-              <img src={starIcon} />
+              <img className='h-[13.6px] w-[13.6px]' src={starIcon} />
             </div>
             <div className="w-[320px] overflow-hidden rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pr-[30px] text-black">
               {greetingPrompt || DEFAULT_GREETING}
