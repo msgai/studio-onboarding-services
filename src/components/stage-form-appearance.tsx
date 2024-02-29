@@ -57,6 +57,7 @@ export default function StageFormAppearance() {
   };
   return (
     <div className={'w-full'}>
+      <div className='overflow-y-auto h-[350px] pb-[50px]'>
       <div>
         <div className="mb-[10px] text-lg font-bold leading-none text-white">Greeting Prompt</div>
         <Input
@@ -82,7 +83,8 @@ export default function StageFormAppearance() {
           onChange={(url: any) => setLogoUrl(url)}
         />
       </div>
-      <div className={'mt-[50px] flex justify-end'}>
+      </div>
+      <div className={'mt-[50px] scale-[1.25] mr-[90px] flex justify-end'}>
         <button
           className={
             'flex items-center justify-center rounded-full bg-orange-400 px-[32px] py-[12px] text-sm text-white'

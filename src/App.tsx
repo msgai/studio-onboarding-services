@@ -88,11 +88,15 @@ function App() {
   return (
     <>
       {botDetails && (
-        <div className={'flex h-full w-full flex-nowrap'}>
-          <div className={'relative mx-[30px] flex-grow  overflow-y-auto pb-[30px] pt-[30px]'}>
-            <Header />
-            <StageSelector />
-            <StageForm />
+        <div className={'relative flex h-[100vh] overflow-hidden w-full flex-nowrap'}>
+          <div className={'mx-[30px] flex-grow pb-[30px] pt-[30px]'}>
+            <div className='h-[150px]'>
+              <Header />
+              <StageSelector />
+            </div>
+            <div className='h-[60%] scale-[0.85]'>
+              <StageForm />
+            </div>
           </div>
           <div className={'flex w-[520px] justify-center overflow-hidden bg-neutral-200 pt-[50px]'}>
             <ChatWidgetModel />
