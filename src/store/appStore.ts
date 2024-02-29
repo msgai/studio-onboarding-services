@@ -19,6 +19,8 @@ interface AppState {
   setStage: (data: STAGES) => void;
   setChatWidgetConfig: (data: any) => void;
   setSocialConfig: (data: any) => void;
+  aiAgentPersona: any;
+  setAiAgentPersona: (data: any) => void;
 }
 
 const useAppStore = create<AppState>()(
@@ -33,6 +35,12 @@ const useAppStore = create<AppState>()(
       chatWidgetCdnUrl: '',
       botRefIdStaging: '',
       botRefIdProduction: '',
+      aiAgentPersona: null,
+      setAiAgentPersona: (data: any) => {
+        set({
+          aiAgentPersona: data,
+        });
+      },
       setBotRefIdStaging: (data: string) => {
         set({
           botRefIdStaging: data,

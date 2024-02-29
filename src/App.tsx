@@ -9,6 +9,8 @@ import useAppStore from '@/store/appStore.ts';
 import Spinner from '@/components/atoms/spinner.tsx';
 import { getConfig, getSocialConfig } from '@/services/app.ts';
 import { getChatWidgetDetails } from '@/services/chatWidget.ts';
+import useFormStore from '@/store/formStore.ts';
+import { getAiAgentPersona } from '@/services/aiAgentService.ts';
 
 function App() {
   const {
@@ -22,8 +24,11 @@ function App() {
     setBotRefIdProduction,
   } = useAppStore();
 
-  const { socialConfig, chatWidgetAppEnv, botDetails, botRefIdStaging, chatWidgetConfig } = useAppStore();
-  const [loading, setLoading] = useState(true)
+  const { aiAgentPersona, setAiAgentPersona, chatWidgetAppEnv, botDetails, botRefIdStaging, chatWidgetConfig } =
+    useAppStore();
+  const { setTone, setGreetingPrompt, setLogoUrl, setColor, setBrandName, setAiAgentName } = useFormStore();
+
+  const [loading, setLoading] = useState(true);
   async function fetchBotDetails() {
     const botId = localStorage.getItem('currentBotId');
     const $botDetails = await getBotDetail(botId);
@@ -69,18 +74,24 @@ function App() {
     console.log('chatWidgetConfig', payload);
   }
 
+  async function fetchAiAgentPersona() {
+    const payload = await getAiAgentPersona();
+    setAiAgentPersona(payload);
+  }
+
   useEffect(() => {
     fetchBotDetails();
     fetchSocialConfig();
     fetchChatWidgetConfigs();
+    fetchAiAgentPersona();
   }, []);
 
   useEffect(() => {
-    console.log('botDetails', botDetails, chatWidgetConfig);
-      if(chatWidgetConfig && botDetails){
-        setLoading(false)
-      }
-  }, [botDetails, chatWidgetConfig]);
+    if (chatWidgetConfig && botDetails && aiAgentPersona) {
+      console.log('botDetails', botDetails, chatWidgetConfig);
+      setLoading(false);
+    }
+  }, [botDetails, chatWidgetConfig, aiAgentPersona]);
 
   useEffect(() => {
     if (chatWidgetAppEnv && botRefIdStaging) {
@@ -88,16 +99,27 @@ function App() {
     }
   }, [chatWidgetAppEnv, botRefIdStaging]);
 
+  useEffect(() => {
+    if (chatWidgetConfig) {
+      setGreetingPrompt(chatWidgetConfig.initialFlows?.header);
+      setColor(chatWidgetConfig.theme?.color);
+      setLogoUrl(chatWidgetConfig.logoImage);
+      setBrandName(chatWidgetConfig.title);
+      setAiAgentName(botDetails.alias);
+      setTone(aiAgentPersona.aiAgentPersonaConfig?.communicationTone?.tone);
+    }
+  }, [chatWidgetConfig, botDetails, aiAgentPersona]);
+
   return (
     <>
       {!loading && (
-        <div className={'relative flex h-[100vh] overflow-hidden w-full flex-nowrap'}>
+        <div className={'relative flex h-[100vh] w-full flex-nowrap overflow-hidden'}>
           <div className={'mx-[30px] flex-grow pb-[30px] pt-[30px]'}>
-            <div className='h-[150px]'>
+            <div className="h-[150px]">
               <Header />
               <StageSelector />
             </div>
-            <div className='h-[60%] scale-[0.85]'>
+            <div className="h-[60%] scale-[0.85]">
               <StageForm />
             </div>
           </div>

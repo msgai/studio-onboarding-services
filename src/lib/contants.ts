@@ -45,4 +45,20 @@ export const STAGE_LIST_DATA = {
 
 export const COLOR_LIST = ['#AFA4FF', '#E64B32', '#ECB940', '#5DC974', '#2B77F6'];
 
-export const TONE_LIST = ['Friendly', 'Professional'];
+export enum TONE {
+  FRIENDLY = 'FRIENDLY',
+  PROFESSIONAL = 'PROFESSIONAL',
+}
+
+export const TONE_LIST_DATA = {
+  [TONE.FRIENDLY]: {
+    label: 'Friendly',
+  },
+  [TONE.PROFESSIONAL]: {
+    label: 'Professional',
+  },
+};
+
+export const TONE_LIST = [TONE.FRIENDLY, TONE.PROFESSIONAL];
+
+// export const TONE_LIST = ['FRIENDLY', 'Professional'];

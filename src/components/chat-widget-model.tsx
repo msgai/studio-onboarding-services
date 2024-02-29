@@ -18,10 +18,7 @@ type Props = OwnProps;
 const DEFAULT_GREETING = 'Hello! Welcome to AeroSkyline Airlines customer support. How can I assist you today?';
 
 const ChatWidgetModel: FunctionComponent<Props> = () => {
-  const { greetingPrompt, color, logoUrl } = useFormStore((state) => state);
-  const [config, setConfig] = useState({
-    botName: 'Aeroskyline Chat Bot Name',
-  });
+  const { greetingPrompt, color, logoUrl, brandName } = useFormStore((state) => state);
 
   return (
     <div className={'h-[699px] w-[419px] scale-[.85] overflow-auto rounded-[20px] bg-white'}>
@@ -37,9 +34,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
         <div className={'mr-[10px] w-[32px]'}>
           <img src={logoUrl} />
         </div>
-        <div className={'mr-[10px] w-[216px] overflow-hidden overflow-ellipsis whitespace-nowrap'}>
-          {config.botName}
-        </div>
+        <div className={'mr-[10px] w-[216px] overflow-hidden overflow-ellipsis whitespace-nowrap'}>{brandName}</div>
         <div className={'mr-[20px]'}>
           <img src={hyphenIcon} />
         </div>
@@ -49,7 +44,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
       </div>
 
       <div className={'chat-widget-content relative mt-[-64px] h-full px-[16px] pt-[180px]'}>
-        <div className={'chat-widget-body flex flex-col gap-y-[16px] mt-[60px]'}>
+        <div className={'chat-widget-body mt-[60px] flex flex-col gap-y-[16px]'}>
           <div className={'flex'}>
             <div className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}>
               <img src={starIcon} />

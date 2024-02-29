@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { TONE_LIST } from '@/lib/contants.ts';
+import { TONE_LIST, TONE_LIST_DATA } from '@/lib/contants.ts';
 import { clsx } from 'clsx';
 
 export interface OwnProps {
@@ -30,7 +30,7 @@ const ToneSelector: FunctionComponent<Props> = ({ value, onChange }) => {
               ])}
               onClick={() => onClickHandler(item)}
             >
-              {item}
+              {TONE_LIST_DATA[item].label}
             </div>
           );
         })}
