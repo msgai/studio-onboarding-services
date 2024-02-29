@@ -37,7 +37,7 @@ function App() {
       const payload = $botDetails.payload;
       setBotDetails(payload);
       const properties = payload.properties;
-      const onboardingStageIndex = parseInt(properties['ONBOARDING_STAGE'].value);
+      const onboardingStageIndex = parseInt(properties['ONBOARDING_STAGE']?.value);
       setStage(STAGE_LIST[onboardingStageIndex || 0]);
     }
   }
@@ -114,7 +114,7 @@ function App() {
   useEffect(() => {
     if (botDetails) {
       const properties = botDetails.properties;
-      const isOnboardingComplete = properties['IS_ONBOARDING_COMPLETE'].value;
+      const isOnboardingComplete = properties['IS_ONBOARDING_COMPLETE']?.value;
       if (isOnboardingComplete === 'true') {
         window.location.href = '/';
       }
