@@ -2,7 +2,7 @@ import Header from './components/header.tsx';
 import StageSelector from './components/stage-selector.tsx';
 import StageForm from '@/components/stage-form.tsx';
 import ChatWidgetModel from '@/components/chat-widget-model.tsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getBotDetail } from '@/services/bots.ts';
 import { STAGE_LIST } from '@/lib/contants.ts';
 import useAppStore from '@/store/appStore.ts';
@@ -22,8 +22,8 @@ function App() {
     setBotRefIdProduction,
   } = useAppStore();
 
-  const { socialConfig, chatWidgetAppEnv, botDetails, botRefIdStaging } = useAppStore();
-
+  const { socialConfig, chatWidgetAppEnv, botDetails, botRefIdStaging, chatWidgetConfig } = useAppStore();
+  const [loading, setLoading] = useState(true)
   async function fetchBotDetails() {
     const botId = localStorage.getItem('currentBotId');
     const $botDetails = await getBotDetail(botId);
@@ -76,8 +76,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log('botDetails', botDetails);
-  }, [botDetails]);
+    console.log('botDetails', botDetails, chatWidgetConfig);
+      if(chatWidgetConfig && botDetails){
+        setLoading(false)
+      }
+  }, [botDetails, chatWidgetConfig]);
 
   useEffect(() => {
     if (chatWidgetAppEnv && botRefIdStaging) {
@@ -87,7 +90,7 @@ function App() {
 
   return (
     <>
-      {botDetails && (
+      {!loading && (
         <div className={'flex h-full w-full flex-nowrap'}>
           <div className={'relative mx-[30px] flex-grow  overflow-y-auto pb-[30px] pt-[50px]'}>
             <Header />
@@ -99,7 +102,7 @@ function App() {
           </div>
         </div>
       )}
-      {!botDetails && (
+      {loading && (
         <div className={'flex h-full w-full items-center justify-center'}>
           <Spinner />
         </div>
