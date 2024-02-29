@@ -8,6 +8,7 @@ import useAppStore from '@/store/appStore.ts';
 import useFormStore from '@/store/formStore.ts';
 import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import { updateStage } from '@/services/bots.ts';
+import { getCurrentBotId } from '@/lib/utils.ts';
 
 export default function StageFormAppearance() {
   const { greetingPrompt, setGreetingPrompt, color, setColor, logoUrl, setLogoUrl } = useFormStore((state) => state);
@@ -46,7 +47,7 @@ export default function StageFormAppearance() {
     }
   }, [chatWidgetAppEnv]);
 
-  let botId = localStorage.getItem('currentBotId') || '5fe5fd10-c110-4f48-b950-82e85edac81e';
+  let botId = getCurrentBotId();
   const uploadKeyPrefix = `CHAT-WIDGET/${botId}/logoImage`;
   const kbKeyPrefix = `SETTINGS/KBANSAI/SOURCES/${botId}/`;
   const validateFile = async (fileObj: any) => {
@@ -84,7 +85,7 @@ export default function StageFormAppearance() {
         />
       </div>
       </div>
-      <div className={'mt-[50px] scale-[1.25] mr-[90px] flex justify-end'}>
+      <div className={'mr-[90px] mt-[50px] flex scale-[1.25] justify-end'}>
         <button
           className={
             'flex items-center justify-center rounded-full bg-orange-400 px-[32px] py-[12px] text-sm text-white'

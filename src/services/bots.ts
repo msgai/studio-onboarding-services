@@ -1,5 +1,6 @@
 import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
-import { getUserIdFromLocalStorage } from '@/lib/utils.ts';
+import { getCurrentBotId, getUserIdFromLocalStorage } from '@/lib/utils.ts';
+import DEFAULT_HEADERS from '@/services/setDefaultHeaders.ts';
 
 export async function getBotDetail(botId: string) {
   if (!botId) {
@@ -12,8 +13,7 @@ export async function getBotDetail(botId: string) {
 }
 
 export async function updateStage({ stage, botDetails }: { stage: STAGES; botDetails: any }) {
-  const botId = localStorage.getItem('currentBotId');
-  const userId = getUserIdFromLocalStorage();
+  const botId = getCurrentBotId();
   const properties = botDetails?.properties;
   properties['ONBOARDING_STAGE'] = {
     value: STAGE_LIST.indexOf(stage) + 1,
@@ -27,12 +27,13 @@ export async function updateStage({ stage, botDetails }: { stage: STAGES; botDet
       properties: properties,
     }),
     headers: {
-      'content-type': 'application/json; charset=utf-8',
-      'X-BOT-ID': botId,
-      'X-Channel': 'NETOMI_WEB_WIDGET',
-      'X-Service-Desk': 'NETOMI_WEB_WIDGET',
-      'X-User-ID': userId,
-      env: 'LIVE',
+      ...DEFAULT_HEADERS,
+      // 'content-type': 'application/json; charset=utf-8',
+      // 'X-BOT-ID': botId,
+      // 'X-Channel': 'NETOMI_WEB_WIDGET',
+      // 'X-Service-Desk': 'NETOMI_WEB_WIDGET',
+      // 'X-User-ID': userId,
+      // env: 'LIVE',
     },
     credentials: 'include',
   });
@@ -40,7 +41,7 @@ export async function updateStage({ stage, botDetails }: { stage: STAGES; botDet
 }
 
 export async function finishOnboarding({ botDetails }: { stage: STAGES; botDetails: any }) {
-  const botId = localStorage.getItem('currentBotId');
+  const botId = getCurrentBotId();
   const properties = botDetails?.properties;
   properties['IS_ONBOARDING_COMPLETE'] = {
     value: true,
@@ -54,7 +55,8 @@ export async function finishOnboarding({ botDetails }: { stage: STAGES; botDetai
       properties: properties,
     }),
     headers: {
-      'content-type': 'application/json',
+      ...DEFAULT_HEADERS,
+      // 'content-type': 'application/json',
     },
     credentials: 'include',
   });
@@ -64,7 +66,7 @@ export async function finishOnboarding({ botDetails }: { stage: STAGES; botDetai
 }
 
 export async function updateAiAgentName(data: string) {
-  const botId = localStorage.getItem('currentBotId');
+  const botId = getCurrentBotId();
   const response = await fetch(`/api/resources/bots/${botId}`, {
     method: 'PUT',
     body: JSON.stringify({
@@ -72,7 +74,8 @@ export async function updateAiAgentName(data: string) {
       alias: data,
     }),
     headers: {
-      'content-type': 'application/json',
+      ...DEFAULT_HEADERS,
+      // 'content-type': 'application/json',
     },
     credentials: 'include',
   });

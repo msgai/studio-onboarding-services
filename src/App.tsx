@@ -11,6 +11,7 @@ import { getConfig, getSocialConfig } from '@/services/app.ts';
 import { getChatWidgetDetails } from '@/services/chatWidget.ts';
 import useFormStore from '@/store/formStore.ts';
 import { getAiAgentPersona } from '@/services/aiAgentService.ts';
+import { getCurrentBotId } from '@/lib/utils.ts';
 
 function App() {
   const {
@@ -30,7 +31,7 @@ function App() {
 
   const [loading, setLoading] = useState(true);
   async function fetchBotDetails() {
-    const botId = localStorage.getItem('currentBotId');
+    const botId = getCurrentBotId();
     const $botDetails = await getBotDetail(botId);
     if ($botDetails) {
       const payload = $botDetails.payload;
@@ -44,7 +45,7 @@ function App() {
   async function fetchSocialConfig() {
     const response = await getSocialConfig();
     const botRefId = response?.data?.find((item: any) => {
-      if (item?.env === 'SANDBOX' && item.botId === localStorage.getItem('currentBotId')) return true;
+      if (item?.env === 'SANDBOX' && item.botId === getCurrentBotId()) return true;
     })?.botRefId;
     setBotRefIdProduction(response?.botRefId);
     setBotRefIdStaging(botRefId);
@@ -110,12 +111,22 @@ function App() {
     }
   }, [chatWidgetConfig, botDetails, aiAgentPersona]);
 
+  useEffect(() => {
+    if (botDetails) {
+      const properties = botDetails.properties;
+      const isOnboardingComplete = properties['IS_ONBOARDING_COMPLETE'].value;
+      if (isOnboardingComplete === 'true') {
+        window.location.href = '/';
+      }
+    }
+  }, [botDetails]);
+
   return (
     <>
-      {!loading &&(
-        <div className={'relative flex h-[100vh] overflow-hidden w-full flex-nowrap'}>
+      {!loading && (
+        <div className={'relative flex h-[100vh] w-full flex-nowrap overflow-hidden'}>
           <div className={'mx-[30px] flex-grow pb-[30px] pt-[30px]'}>
-            <div className='h-[50px] flex items-center'>
+            <div className="flex h-[50px] items-center">
               <Header />
               <StageSelector />
             </div>

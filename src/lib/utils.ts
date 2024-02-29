@@ -17,3 +17,13 @@ export function getUserEmailFromLocalStorage() {
     console.error(error);
   }
 }
+
+export function getCurrentBotId() {
+  try {
+    if (localStorage.getItem('currentBot')) {
+      return JSON.parse(localStorage.getItem('currentBot'))?.id;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}

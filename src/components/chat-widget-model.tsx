@@ -8,6 +8,7 @@ import starIcon from '../assets/stars.svg';
 import reloadIcon from '../assets/reload.svg';
 import thumbsUpDown from '../assets/thumbs-up-down.svg';
 import useFormStore from '@/store/formStore.ts';
+import defaultLogo from '../assets/netomi_logo.svg';
 
 export interface OwnProps {
   test?: string;
@@ -32,7 +33,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
           <img src={verticalEllipsisIcon} />
         </div>
         <div className={'mr-[10px] w-[32px]'}>
-          <img src={logoUrl} />
+          <img src={logoUrl || defaultLogo} />
         </div>
         <div className={'mr-[10px] w-[216px] overflow-hidden overflow-ellipsis whitespace-nowrap'}>{brandName}</div>
         <div className={'mr-[20px]'}>
@@ -46,8 +47,11 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
       <div className={'chat-widget-content relative mt-[-64px] h-full px-[16px] pt-[180px]'}>
         <div className={'chat-widget-body mt-[60px] flex flex-col gap-y-[16px]'}>
           <div className={'flex'}>
-            <div className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}>
-              <img className='h-[13.6px] w-[13.6px]' src={starIcon} />
+            <div
+              style={{ backgroundColor: color }}
+              className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}
+            >
+              <img className="h-[13.6px] w-[13.6px]" src={logoUrl || defaultLogo} />
             </div>
             <div className="w-[320px] overflow-hidden rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pr-[30px] text-black">
               {greetingPrompt || DEFAULT_GREETING}
@@ -57,8 +61,11 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
             I need help with my flight?
           </div>
           <div className={'flex'}>
-            <div className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}>
-              <img src={starIcon} />
+            <div
+              style={{ backgroundColor: color }}
+              className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}
+            >
+              <img src={logoUrl || defaultLogo} />
             </div>
             <div>
               <div className="w-[320px] self-start rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pr-[30px] text-black">

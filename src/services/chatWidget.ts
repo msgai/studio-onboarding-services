@@ -1,8 +1,7 @@
 import { getUserEmailFromLocalStorage, getUserIdFromLocalStorage } from '@/lib/utils.ts';
+import DEFAULT_HEADERS from '@/services/setDefaultHeaders.ts';
 
 export async function getChatWidgetDetails({ env, botRefId }: { env: string; botRefId: string }) {
-  const botId = localStorage.getItem('currentBotId');
-  const userId = getUserIdFromLocalStorage();
   const response = await fetch(`/api/upload/get-object`, {
     method: 'POST',
     body: JSON.stringify({
@@ -10,12 +9,13 @@ export async function getChatWidgetDetails({ env, botRefId }: { env: string; bot
       uploadKeyPrefix: `${env}/json-config/${botRefId}.json`,
     }),
     headers: {
-      'X-BOT-ID': botId,
-      'X-Channel': 'NETOMI_WEB_WIDGET',
-      'X-Service-Desk': 'NETOMI_WEB_WIDGET',
-      'X-User-ID': userId,
-      env: 'LIVE',
-      'content-type': 'application/json',
+      ...DEFAULT_HEADERS,
+      // 'X-BOT-ID': botId,
+      // 'X-Channel': 'NETOMI_WEB_WIDGET',
+      // 'X-Service-Desk': 'NETOMI_WEB_WIDGET',
+      // 'X-User-ID': userId,
+      // env: 'LIVE',
+      // 'content-type': 'application/json',
     },
     credentials: 'include',
   });
@@ -31,8 +31,6 @@ export async function updateChatWidgetDetails({
   botRefId: string;
   payloadString: string;
 }) {
-  const botId = localStorage.getItem('currentBotId');
-  const userId = getUserIdFromLocalStorage();
   const userEmail = getUserEmailFromLocalStorage();
   const response = await fetch(`/api/upload/put-object`, {
     method: 'POST',
@@ -44,12 +42,13 @@ export async function updateChatWidgetDetails({
       contents: payloadString,
     }),
     headers: {
-      'X-BOT-ID': botId,
-      'X-Channel': 'NETOMI_WEB_WIDGET',
-      'X-Service-Desk': 'NETOMI_WEB_WIDGET',
-      'X-User-ID': userId,
-      env: 'LIVE',
-      'content-type': 'application/json',
+      ...DEFAULT_HEADERS,
+      // 'X-BOT-ID': botId,
+      // 'X-Channel': 'NETOMI_WEB_WIDGET',
+      // 'X-Service-Desk': 'NETOMI_WEB_WIDGET',
+      // 'X-User-ID': userId,
+      // env: 'LIVE',
+      // 'content-type': 'application/json',
     },
     credentials: 'include',
   });
@@ -57,8 +56,6 @@ export async function updateChatWidgetDetails({
 }
 
 export async function invalidateCloudfront({ env, botRefId }: { env: string; botRefId: string }) {
-  const botId = localStorage.getItem('currentBotId');
-  const userId = getUserIdFromLocalStorage();
   const response = await fetch(`/api/cloudfront/invalidate`, {
     method: 'POST',
     body: JSON.stringify({
@@ -66,12 +63,13 @@ export async function invalidateCloudfront({ env, botRefId }: { env: string; bot
       path: `/json-config/${botRefId}.json`,
     }),
     headers: {
-      'X-BOT-ID': botId,
-      'X-Channel': 'NETOMI_WEB_WIDGET',
-      'X-Service-Desk': 'NETOMI_WEB_WIDGET',
-      'X-User-ID': userId,
-      env: 'LIVE',
-      'content-type': 'application/json',
+      ...DEFAULT_HEADERS,
+      // 'X-BOT-ID': botId,
+      // 'X-Channel': 'NETOMI_WEB_WIDGET',
+      // 'X-Service-Desk': 'NETOMI_WEB_WIDGET',
+      // 'X-User-ID': userId,
+      // env: 'LIVE',
+      // 'content-type': 'application/json',
     },
     credentials: 'include',
   });
