@@ -89,7 +89,7 @@ function App() {
     <>
       {botDetails && (
         <div className={'flex h-full w-full flex-nowrap'}>
-          <div className={'relative mx-[30px] flex-grow  overflow-y-auto pb-[30px] pt-[50px]'}>
+          <div className={'relative mx-[30px] flex-grow  overflow-y-auto pb-[30px] pt-[30px]'}>
             <Header />
             <StageSelector />
             <StageForm />

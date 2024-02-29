@@ -29,7 +29,7 @@ export default function StageSelectorItem({ stage, isCompleted }: Props) {
         {!isFirstStage && <div className={'absolute right-[] top-[0px] h-[0.5px] w-[50px] bg-white'}>&nbsp;</div>}
         <div
           className={clsx([
-            'absolute left-[50px] top-[-3px] z-10 h-[6px] w-[6px] shrink-0 overflow-hidden rounded-full',
+            'absolute left-[52px] top-[-3px] z-10 h-[6px] w-[6px] shrink-0 overflow-hidden rounded-full',
             isSelected ? 'bg-white' : 'bg-[#796ee5]',
           ])}
         >

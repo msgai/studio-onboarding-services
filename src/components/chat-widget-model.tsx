@@ -50,9 +50,6 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
 
       <div className={'chat-widget-content relative mt-[-64px] h-full px-[16px] pt-[180px]'}>
         <div className={'chat-widget-body flex flex-col gap-y-[16px]'}>
-          <div className="self-end rounded-[15px] px-[20px] py-[12px] text-white" style={{ backgroundColor: color }}>
-            Hi
-          </div>
           <div className={'flex'}>
             <div className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}>
               <img src={starIcon} />
