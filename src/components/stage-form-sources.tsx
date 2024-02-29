@@ -10,12 +10,13 @@ import { updateAiAgentPersona } from '@/services/aiAgentService.ts';
 import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import Table from './atoms/source-table';
 import Spinner from './atoms/spinner';
+import { toast } from 'sonner';
 
 export default function StageFormSources() {
   const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone } = useFormStore((state) => state);
-  const[sources,updateSources] =useState([])
-  const[loading,setLoading] =useState(true)
-  const[overlayLoading,setOverlayLoading] =useState(false)
+  const [sources, updateSources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [overlayLoading, setOverlayLoading] = useState(false);
   const { setStage, botDetails } = useAppStore();
 
   async function updateStageData() {
@@ -31,7 +32,10 @@ export default function StageFormSources() {
   async function handleFormSubmit() {
     // const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
     // await promise;
+    const id = toast.loading('Saving...');
     await updateStageData();
+    toast.dismiss(id);
+    toast.success('Saved');
   }
   async function onDelete(source: any) {
     try {

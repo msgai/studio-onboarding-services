@@ -8,6 +8,7 @@ import useFormStore from '@/store/formStore.ts';
 import { COLOR_LIST, STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import { updateStage } from '@/services/bots.ts';
 import { getCurrentBotId } from '@/lib/utils.ts';
+import { toast } from 'sonner';
 
 export default function StageFormAppearance() {
   const { greetingPrompt, setGreetingPrompt, color, setColor, logoUrl, setLogoUrl } = useFormStore((state) => state);
@@ -17,6 +18,7 @@ export default function StageFormAppearance() {
   }
 
   async function handleFormSubmit() {
+    const id = toast.loading('Saving...');
     const chatWidgetConfigCopy = JSON.parse(JSON.stringify(chatWidgetConfig));
     chatWidgetConfigCopy.initialFlows.header = greetingPrompt;
     chatWidgetConfigCopy.theme.color = color;
@@ -35,6 +37,8 @@ export default function StageFormAppearance() {
     if (payload?.statusCode === 'SUCCESS') {
       setStage(STAGE_LIST[STAGE_LIST.indexOf(STAGES.APPEARANCE) + 1]);
     }
+    toast.dismiss(id);
+    toast.success('Saved');
     console.log('payload ===>', payload);
   }
 

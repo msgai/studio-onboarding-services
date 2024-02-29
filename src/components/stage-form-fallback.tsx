@@ -1,15 +1,8 @@
-import Input from '@/components/atoms/Input.tsx';
-import React, { useEffect, useState } from 'react';
-import ToneSelector from '@/components/atoms/tone-selector.tsx';
-import { invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWidget.ts';
-import { updateAiAgentName, updateStage } from '@/services/bots.ts';
-import useFormStore from '@/store/formStore.ts';
+import React from 'react';
+import { updateStage } from '@/services/bots.ts';
 import useAppStore from '@/store/appStore.ts';
-import answerai from '@/services/answerAi';
-import { updateAiAgentPersona } from '@/services/aiAgentService.ts';
 import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
-import Table from './atoms/source-table';
-import Spinner from './atoms/spinner';
+import { toast } from 'sonner';
 
 export default function StageFormFallback() {
   const { botDetails, setStage } = useAppStore();
@@ -25,7 +18,10 @@ export default function StageFormFallback() {
   }
 
   async function handleFormSubmit() {
+    const id = toast.loading('Saving...');
     await updateStageData();
+    toast.dismiss(id);
+    toast.success('Saved');
   }
   return (
     <div className={'w-full'}>

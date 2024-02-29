@@ -12,6 +12,7 @@ import { getChatWidgetDetails } from '@/services/chatWidget.ts';
 import useFormStore from '@/store/formStore.ts';
 import { getAiAgentPersona } from '@/services/aiAgentService.ts';
 import { getCurrentBotId } from '@/lib/utils.ts';
+import { Toaster } from 'sonner';
 
 function App() {
   const {
@@ -137,6 +138,7 @@ function App() {
           <div className={'flex w-[520px] justify-center overflow-hidden bg-neutral-200 pt-[50px]'}>
             <ChatWidgetModel />
           </div>
+          <Toaster />
         </div>
       )}
       {loading && (

@@ -8,6 +8,7 @@ import useAppStore from '@/store/appStore.ts';
 import answerai from '@/services/answerAi';
 import { updateAiAgentPersona } from '@/services/aiAgentService.ts';
 import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
+import { toast } from 'sonner';
 
 export default function StageFormTone() {
   const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone } = useFormStore((state) => state);
@@ -52,9 +53,12 @@ export default function StageFormTone() {
   }
 
   async function handleFormSubmit() {
+    const id = toast.loading('Saving...');
     const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
     await promise;
     await updateStageData();
+    toast.dismiss(id);
+    toast.success('Saved');
   }
   useEffect(() => {
     answerai.getAllSources().then((res: any) => {

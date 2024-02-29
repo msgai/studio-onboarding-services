@@ -2,6 +2,7 @@ import React from 'react';
 import { finishOnboarding, updateAiAgentName, updateStage } from '@/services/bots.ts';
 import useAppStore from '@/store/appStore.ts';
 import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
+import { toast } from 'sonner';
 
 export default function StageFormTest() {
   const { botDetails, setStage } = useAppStore();
@@ -20,8 +21,11 @@ export default function StageFormTest() {
   }
 
   async function handleFormSubmit() {
+    const id = toast.loading('Saving...');
     await updateStageData();
     window.location.href = '/';
+    toast.dismiss(id);
+    toast.success('Saved');
   }
 
   return (

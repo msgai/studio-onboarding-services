@@ -1,10 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import { useState } from 'react';
 import verticalEllipsisIcon from '../assets/vertical-ellipsis.svg';
 import hyphenIcon from '../assets/hyphen.svg';
 import crossIcon from '../assets/cross.svg';
-import deleteIcon from '../assets/delete.svg';
-import starIcon from '../assets/stars.svg';
 import reloadIcon from '../assets/reload.svg';
 import thumbsUpDown from '../assets/thumbs-up-down.svg';
 import useFormStore from '@/store/formStore.ts';
