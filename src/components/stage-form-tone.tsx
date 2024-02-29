@@ -1,9 +1,8 @@
 import Input from '@/components/atoms/Input.tsx';
-import ColorPicker from '@/components/atoms/color-picker.tsx';
-import React, { useState } from 'react';
-import IconUploader from '@/components/atoms/file-uploader';
+import React, { useEffect, useState } from 'react';
 import ToneSelector from '@/components/atoms/tone-selector.tsx';
 import { TONE_LIST } from '@/lib/contants.ts';
+import answerai from '@/services/answerAi'
 
 export default function StageFormTone() {
   const [tone, setTone] = useState(TONE_LIST[0]);
@@ -15,6 +14,11 @@ export default function StageFormTone() {
   function handleFormSubmit() {
     console.log('Form Submitted');
   }
+  useEffect(() => {
+    answerai.getAllSources().then((res: any) => {
+      console.log('Answer', res)
+    })
+  },[])
 
   return (
     <div className={'w-full'}>
