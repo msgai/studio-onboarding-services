@@ -33,7 +33,7 @@ export default function StageFormTone() {
           Informal: Allows casual usage of slang and other phrases
         </div>
       </div>
-      <div className={'mt-[50px] flex justify-end'}>
+      <div className={'mt-[50px] flex justify-end  scale-[1.25] mr-[90px]'}>
         <button
           className={
             'flex items-center justify-center rounded-full bg-orange-400 px-[32px] py-[12px] text-sm text-white'
