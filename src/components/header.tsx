@@ -1,9 +1,10 @@
+import netomiIcon from '../assets/netomi_logo.svg'
+
 export default function Header() {
   return (
-    <div className={'mb-[75px] select-none'}>
+    <div className={'mb-[45px] select-none'}>
       <h1 className="text-[50px] font-normal text-white">
-        <span className="font-['Nunito Sans'] h-8 w-5 text-3xl font-normal text-white">^</span>
-        netomi
+        <img src ={netomiIcon}/>
       </h1>
     </div>
   );
