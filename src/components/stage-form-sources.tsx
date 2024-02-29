@@ -15,9 +15,10 @@ export default function StageFormSources() {
   const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone } = useFormStore((state) => state);
   const { botDetails, setStage } = useAppStore();
 
-  const[sources,updateSources] =useState([])
-  const[loading,setLoading] =useState(true)
-  const[overlayLoading,setOverlayLoading] =useState(false)
+  const [sources, updateSources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [overlayLoading, setOverlayLoading] = useState(false);
+
   async function updateStageData() {
     const payload = await updateStage({
       stage: STAGES.SOURCES,
@@ -32,17 +33,16 @@ export default function StageFormSources() {
     // await promise;
     await updateStageData();
   }
-  async function onDelete(source:any) {
-    try{
-      setOverlayLoading(true)
-      await answerai.delete(source.sourceId)
-      updateSources(sources.filter(el=>el.sourceId !== source.sourceId))
-      setOverlayLoading(false)
-    } catch(e) {
+  async function onDelete(source: any) {
+    try {
+      setOverlayLoading(true);
+      await answerai.delete(source.sourceId);
+      updateSources(sources.filter((el) => el.sourceId !== source.sourceId));
+      setOverlayLoading(false);
+    } catch (e) {
       console.error(e);
-      setOverlayLoading(false)
+      setOverlayLoading(false);
     }
-
   }
   useEffect(() => {
     setLoading(true);
@@ -58,9 +58,15 @@ export default function StageFormSources() {
   }, []);
   if (loading) return <Spinner />;
   return (
-    <div className={'w-full relative'}>
-      {overlayLoading &&<div className='absolute h-full w-full opacity-50 bg-gray-700	'><div className='absolute left-[50%] top-[50%]'><Spinner/></div></div>}
-     <Table data={sources} onDelete={onDelete}/>
+    <div className={'relative w-full'}>
+      {overlayLoading && (
+        <div className="absolute h-full w-full bg-gray-700 opacity-50	">
+          <div className="absolute left-[50%] top-[50%]">
+            <Spinner />
+          </div>
+        </div>
+      )}
+      <Table data={sources} onDelete={onDelete} />
       <div>
         <div className="mb-[10px] mt-[30px] text-lg font-bold leading-none text-white">Source Name</div>
         <Input
