@@ -1,4 +1,4 @@
-import { FIRST_STAGE, STAGE_LIST_DATA, STAGES } from '@/lib/contants.ts';
+import { FIRST_STAGE, LAST_STAGE, STAGE_LIST_DATA, STAGES } from '@/lib/contants.ts';
 import { clsx } from 'clsx';
 import useAppStore from '@/store/appStore.ts';
 import { useEffect, useState } from 'react';
@@ -13,7 +13,7 @@ export default function StageSelectorItem({ stage, isCompleted }: Props) {
   const { currentStage } = useAppStore((state) => state);
   const stageData = STAGE_LIST_DATA[stage];
   const isFirstStage = FIRST_STAGE === stage;
-  const isLastStage = STAGES.TEST === stage;
+  const isLastStage = LAST_STAGE === stage;
 
   useEffect(() => {
     setIsSelected(isCompleted || currentStage === stage);

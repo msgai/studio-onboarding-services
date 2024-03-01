@@ -1,3 +1,6 @@
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 export function getUserIdFromLocalStorage() {
   try {
     if (localStorage.getItem('user')) {
@@ -26,4 +29,8 @@ export function getCurrentBotId() {
   } catch (error) {
     console.error(error);
   }
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }

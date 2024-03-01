@@ -1,6 +1,7 @@
 import { COLOR_LIST } from '@/lib/contants.ts';
 import { clsx } from 'clsx';
 import pencil from '@/assets/pencil.svg';
+import CustomColorPicker from '@/components/atoms/custom-color-picker.tsx';
 interface Props {
   value: string;
   onChange: (value: string) => void;
@@ -9,10 +10,6 @@ export default function ColorPicker({ value, onChange }: Props) {
   function onClickHandler(color: string) {
     console.log('color', color);
     onChange(color);
-  }
-
-  function openColorPicker() {
-    console.log('openColorPicker');
   }
 
   return (
@@ -39,13 +36,8 @@ export default function ColorPicker({ value, onChange }: Props) {
           </div>
         );
       })}
-      <div
-        className={clsx(['rounded-full border border-solid border-transparent bg-transparent p-[5px]'])}
-        onClick={openColorPicker}
-      >
-        <div className={'flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-[50%] bg-white'}>
-          <img src={pencil} alt="plus" />
-        </div>
+      <div className={clsx(['rounded-full border border-solid border-transparent bg-transparent p-[5px]'])}>
+        <CustomColorPicker />
       </div>
     </div>
   );
