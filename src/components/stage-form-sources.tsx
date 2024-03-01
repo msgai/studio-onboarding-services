@@ -1,16 +1,16 @@
 import Input from '@/components/atoms/Input.tsx';
 import React, { useEffect, useState } from 'react';
-import ToneSelector from '@/components/atoms/tone-selector.tsx';
 import {  updateStage } from '@/services/bots.ts';
 import useFormStore from '@/store/formStore.ts';
 import useAppStore from '@/store/appStore.ts';
 import answerai from '@/services/answerAi';
 import llm from '@/services/llm';
-import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
+import { STAGE_LIST, STAGES,subTypeConstants } from '@/lib/contants.ts';
 import Table from './atoms/source-table';
 import Spinner from './atoms/spinner';
 import { toast } from 'sonner';
-import { getCurrentBotId } from '@/lib/utils';
+import { getCurrentBotId, CSVFileReader, excelFileValuesReader } from '@/lib/utils';
+import FileUploader from '@/components/atoms/file-uploader';
 
 export default function StageFormSources({startPolling}:any) {
   const { brandName, setBrandName, aiAgentName, setAiAgentName, llmCreationState } = useFormStore((state) => state);
@@ -18,7 +18,14 @@ export default function StageFormSources({startPolling}:any) {
   const [loading, setLoading] = useState(true);
   const [overlayLoading, setOverlayLoading] = useState(false);
   const { setStage, botDetails } = useAppStore();
-
+  const [payload, setPayload] = useState({
+    sourceName: '',
+    sourceType: '',
+    fileUrl: '',
+    webUrl: '',
+    subType: subTypeConstants.CUSTOM_KB,
+    botId: getCurrentBotId()
+  })
   async function updateStageData() {
     const payload = await updateStage({
       stage: STAGES.SOURCES,
@@ -54,6 +61,7 @@ export default function StageFormSources({startPolling}:any) {
   }
   async function addSource(source: any) {
     try {
+       console.log(source)
       setOverlayLoading(true);
       let payload = {    
         "botId": getCurrentBotId(),
@@ -73,6 +81,69 @@ export default function StageFormSources({startPolling}:any) {
       console.error(e);
       setOverlayLoading(false);
     }
+  }
+  const kbKeyPrefix = `SETTINGS/KBANSAI/SOURCES/${getCurrentBotId()}/`;
+  const isValidFileSize = (fileObj:any) => {
+    if (fileObj.size > 1024 * 1024 * 20 || fileObj.size === 0) {
+      throw new Error('File size must be smaller than 20mb')
+    }
+    return true
+  }
+  function validateDOC (ext:any) {
+    if (ext === 'doc' || ext === 'docx' || ext === 'pdf') {
+      return true
+    }
+    return false
+  }
+  function validateCustomKBCSV (fileData:any) {
+    if(!(fileData.split('\n').length > 0 && /title,body,html_url/gi.test(fileData.split('\n')[0]))) {
+      throw new Error('Upload Valid file')
+    }
+  }
+  function validateCustomExcel (fileData:any) {
+    console.log(fileData, fileData.length > 1 && /title,body,html_url/gi.test(fileData[1]))
+    if(!(fileData.length > 1 && /title,body,html_url/gi.test(fileData[1]))) {
+      throw new Error('Upload Valid file')
+    }
+  }
+  function validateCuratedCSV (fileData:any) {
+    if(!(fileData.split('\n').length > 0 && /question(?:,display question|\s*),short answer,long answer(?:,source url|\s*)(?:,topic mapped|\s*)(?:,tags|\s*)$/gi.test(fileData.split('\n')[0]))) {
+      throw new Error('Upload Valid file')
+    }
+  }
+  function validateCuratedExcel (fileData:any) {
+    if(!(fileData.length > 1 && /question(?:,display question|\s*),short answer,long answer(?:,source url|\s*)(?:,topic mapped|\s*)(?:,tags|\s*)$/gi.test(fileData[1]))) {
+      throw new Error('Upload Valid file')
+    }
+  }
+  function validateCuratedFile (fileObj:any, fileExt:any) {
+    if (fileExt === 'xlsx') return excelFileValuesReader(fileObj, validateCuratedExcel)
+    else if (fileExt === 'csv') return CSVFileReader(fileObj, validateCuratedCSV)
+    else return false
+  }
+  function validateCustomFile (fileObj:any, fileExt:any) {
+    if (fileExt === 'xlsx') return excelFileValuesReader(fileObj, validateCustomExcel)
+    else if (fileExt === 'csv') return CSVFileReader(fileObj, validateCustomKBCSV)
+    else return false
+  }
+  const validateFile = async (fileObj: any) => {
+    console.log(fileObj.size);
+    console.log(fileObj.raw)
+    let fileExt = fileObj.name && fileObj.name.split('.').pop()
+    if (isValidFileSize(fileObj)) {
+      switch (payload.subType) {
+        case subTypeConstants.PDF:
+        case subTypeConstants.DOC:
+          return validateDOC(fileExt)
+        case subTypeConstants.CURATED_FAQ:
+          return validateCuratedFile(fileObj, fileExt)
+        case subTypeConstants.CUSTOM_KB:
+          return validateCustomFile(fileObj, fileExt)
+      }
+    }
+  };
+  function onFileUpload(fileUrl:string) {
+    setPayload({...payload, fileUrl: fileUrl})
   }
   useEffect(() => {
     setLoading(true);
@@ -129,7 +200,12 @@ export default function StageFormSources({startPolling}:any) {
           }}
         />
       </div>
+      <div className={'mt-[30px]'}>
+      <div className="mb-[10px] text-lg font-bold leading-none text-white">Upload File</div>
+        <FileUploader value={payload.fileUrl} description=".CSV, .XLSX containing website data" accept='.csv,.xlsx' uploadKeyPrefix={kbKeyPrefix} validateFile={validateFile} onChange={onFileUpload}/>
+      </div>
           <button onClick={addSource}> Add Source</button>
+          
       <div className={'mr-[90px] mt-[50px] flex justify-end'}>
         <button
           className={

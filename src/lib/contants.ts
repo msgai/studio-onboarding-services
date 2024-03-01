@@ -62,3 +62,13 @@ export const TONE_LIST_DATA = {
 export const TONE_LIST = [TONE.FRIENDLY, TONE.PROFESSIONAL];
 
 // export const TONE_LIST = ['FRIENDLY', 'Professional'];
+export const subTypeConstants = {
+  CUSTOM_KB: 'CUSTOM_KB',
+  CURATED_FAQ: 'CURATED_FAQ',
+  DOC: 'DOC',
+  PDF: 'PDF',
+  WEB_URL: 'WEB_URL',
+  ZENDESK_KB_JSON: 'ZENDESK_KB_JSON',
+  ONLINE_PDF: 'ONLINE_PDF',
+  SITE_MAP: 'SITE_MAP'
+}

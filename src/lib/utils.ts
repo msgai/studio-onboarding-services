@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import * as Excel from 'exceljs'
 
 export function getUserIdFromLocalStorage() {
   try {
@@ -62,6 +63,62 @@ export async function checkApiCompleted(service:Function, retryTime:number, addT
     poll();
   });
 }
+export function CSVFileReader (fileObj:any, validatorFunc:Function) {
+  const fileExt = fileObj.name && fileObj.name.split('.').pop()
+  if (fileExt !== 'csv') return false
+  const reader = new window.FileReader()
+  return new Promise(resolve => {
+    reader.onerror = () => {
+      reader.abort()
+      console.error('Problem parsing input file.')
+    }
+    reader.onload = async () => {
+      try {
+        const isValid = validatorFunc(reader.result)
+        return resolve(isValid)
+      } catch (error) {
+        return resolve(false)
+      }
+    }
+    reader.readAsText(fileObj)
+  })
+}
+export function excelFileValuesReader (fileObj:any, validatorFunc:any) {
+  const fileExt = fileObj.name && fileObj.name.split('.').pop()
+  if (fileExt !== 'xlsx') return false
+  const reader = new window.FileReader()
+  return new Promise((resolve, reject) => {
+    reader.onerror = () => {
+      reader.abort()
+      console.error('Problem parsing input file.')
+    }
+    reader.onload = async () => {
+      try {
+        const values = await readExcel(reader.result)
+        const isValid = validatorFunc(values)
+        return resolve(isValid)
+      } catch (error) {
+        return reject(error)
+      }
+    }
+    reader.readAsArrayBuffer(fileObj)
+  })
+}
+export async function readExcel (fileBuffer:any) {
+  const workbook = new Excel.Workbook()
+  let response
+  await workbook.xlsx
+    .load(fileBuffer)
+    .then((wb:any) => {
+      wb.eachSheet((sheet:any) => {
+        response = sheet.getSheetValues()
+      })
+    })
+    .catch((error:any) => { response = error })
+  console.log(response)
+  return response
+}
+
 function delay(ms:any) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -69,3 +126,4 @@ function delay(ms:any) {
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
