@@ -15,11 +15,11 @@ const answerAi = {
     });
     return response.json();
   },
-  async update(data: any, options: any) {
+  async update(data: any) {
     let response = await fetch(`/api/resources${_endpoint}`, {
       method: 'PUT',
       body: JSON.stringify(data),
-      headers: { ...DEFAULT_HEADERS, ...options },
+      headers: DEFAULT_HEADERS,
     });
     return response.json();
   },

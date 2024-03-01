@@ -44,7 +44,7 @@ function App() {
       setBotDetails(payload);
       const properties = payload.properties;
       const onboardingStageIndex = parseInt(properties['ONBOARDING_STAGE']?.value);
-      setStage(STAGE_LIST[2]);
+      setStage(STAGE_LIST[onboardingStageIndex || 0]);
     }
   }
 

@@ -10,6 +10,7 @@ import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import Table from './atoms/source-table';
 import Spinner from './atoms/spinner';
 import { toast } from 'sonner';
+import { getCurrentBotId } from '@/lib/utils';
 
 export default function StageFormSources({startPolling}:any) {
   const { brandName, setBrandName, aiAgentName, setAiAgentName, llmCreationState } = useFormStore((state) => state);
@@ -45,6 +46,28 @@ export default function StageFormSources({startPolling}:any) {
       setOverlayLoading(true);
       await answerai.delete(source.sourceId);
       updateSources(sources.filter((el) => el.sourceId !== source.sourceId));
+      setOverlayLoading(false);
+    } catch (e) {
+      console.error(e);
+      setOverlayLoading(false);
+    }
+  }
+  async function addSource(source: any) {
+    try {
+      setOverlayLoading(true);
+      let payload = {    
+        "botId": getCurrentBotId(),
+        "sourceName": "TESTADD1",
+        "webUrl": "https://netomi.com",
+        "subType": "WEB_URL",
+        "sourceType": "WEB",
+        "isInternal":false,
+        "properties": {
+            "enableArchiveUtility": false
+        }
+    }
+      let res = await answerai.update([payload]);
+      updateSources([...sources, res.payload[0]]);
       setOverlayLoading(false);
     } catch (e) {
       console.error(e);
@@ -106,6 +129,7 @@ export default function StageFormSources({startPolling}:any) {
           }}
         />
       </div>
+          <button onClick={addSource}> Add Source</button>
       <div className={'mr-[90px] mt-[50px] flex justify-end'}>
         <button
           className={
