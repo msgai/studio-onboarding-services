@@ -7,7 +7,7 @@ import StageFormSources from '@/components/stage-form-sources.tsx';
 import StageFormTest from '@/components/stage-form-test.tsx';
 import StageFormFallback from '@/components/stage-form-fallback.tsx';
 
-export default function StageForm() {
+export default function StageForm({startPolling}:any) {
   const currentStage = useAppStore((state) => state.currentStage);
 
   return (
@@ -16,7 +16,7 @@ export default function StageForm() {
       <div className={'mt-[50px]'}>
         {currentStage === STAGES.APPEARANCE && <StageFormAppearance />}
         {currentStage === STAGES.TONE && <StageFormTone />}
-        {currentStage === STAGES.SOURCES && <StageFormSources />}
+        {currentStage === STAGES.SOURCES && <StageFormSources startPolling={startPolling}/>}
         {currentStage === STAGES.FALLBACK && <StageFormFallback />}
         {currentStage === STAGES.TEST && <StageFormTest />}
       </div>

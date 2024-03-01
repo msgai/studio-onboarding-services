@@ -1,18 +1,17 @@
 import Input from '@/components/atoms/Input.tsx';
 import React, { useEffect, useState } from 'react';
 import ToneSelector from '@/components/atoms/tone-selector.tsx';
-import { invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWidget.ts';
-import { updateAiAgentName, updateStage } from '@/services/bots.ts';
+import {  updateStage } from '@/services/bots.ts';
 import useFormStore from '@/store/formStore.ts';
 import useAppStore from '@/store/appStore.ts';
 import answerai from '@/services/answerAi';
-import { updateAiAgentPersona } from '@/services/aiAgentService.ts';
+import llm from '@/services/llm';
 import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import Table from './atoms/source-table';
 import Spinner from './atoms/spinner';
 import { toast } from 'sonner';
 
-export default function StageFormSources() {
+export default function StageFormSources({startPolling}:any) {
   const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone } = useFormStore((state) => state);
   const [sources, updateSources] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,11 +27,13 @@ export default function StageFormSources() {
       setStage(STAGE_LIST[STAGE_LIST.indexOf(STAGES.SOURCES) + 1]);
     }
   }
-
   async function handleFormSubmit() {
     // const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
     // await promise;
     const id = toast.loading('Saving...');
+    const payload = {sources: sources.map(source => ({sourceId: source.sourceId}))}
+    await llm.create(payload)
+    startPolling()
     await updateStageData();
     toast.dismiss(id);
     toast.success('Saved');
@@ -102,13 +103,6 @@ export default function StageFormSources() {
             setAiAgentName(e.target.value);
           }}
         />
-      </div>
-      <div className={'mt-[30px]'}>
-        <div className="mb-[10px] text-lg font-bold leading-none text-white">Formality of Tone</div>
-        <ToneSelector value={tone} onChange={(value: string) => setTone(value)} />
-        <div className="mt-[15px] text-base font-bold text-white">
-          Informal: Allows casual usage of slang and other phrases
-        </div>
       </div>
       <div className={'mr-[90px] mt-[50px] flex justify-end'}>
         <button
