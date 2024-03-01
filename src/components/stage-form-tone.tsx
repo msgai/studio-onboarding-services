@@ -94,10 +94,10 @@ export default function StageFormTone() {
           Informal: Allows casual usage of slang and other phrases
         </div>
       </div>
-      <div className={'mr-[90px] mt-[50px] flex  scale-[1.25] justify-end'}>
+      <div className={'mr-[90px] mt-[50px] flex justify-end'}>
         <button
           className={
-            'flex items-center justify-center rounded-full bg-orange-400 px-[32px] py-[12px] text-sm text-white'
+            'flex items-center justify-center rounded-full bg-orange-400 px-[40px]  py-[15px] text-lg text-white'
           }
           onClick={handleFormSubmit}
         >

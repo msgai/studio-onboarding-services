@@ -84,7 +84,7 @@ export default function StageFormSources() {
         <div className="mb-[10px] mt-[30px] text-lg font-bold leading-none text-white">Source Type</div>
         <select
           id="countries"
-          className="block w-full rounded-lg border border-gray-300 p-2.5 text-lg leading-none text-gray-500 focus:border-blue-500 focus:ring-blue-500 "
+          className=" outline-none h-[56px] block w-full rounded-lg border border-gray-300 p-2.5 text-lg leading-none text-gray-500 focus:border-blue-500 focus:ring-blue-500 "
         >
           <option selected>Choose a country</option>
           <option value="US">United States</option>

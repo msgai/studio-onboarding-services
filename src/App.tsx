@@ -131,7 +131,7 @@ function App() {
               <Header />
               <StageSelector />
             </div>
-            <div className="scale-[0.85]">
+            <div className="scale-[0.85] overflow-y-auto">
               <StageForm />
             </div>
           </div>
