@@ -13,6 +13,9 @@ import useFormStore from '@/store/formStore.ts';
 import { getAiAgentPersona } from '@/services/aiAgentService.ts';
 import { getCurrentBotId } from '@/lib/utils.ts';
 import { Toaster } from 'sonner';
+import llm from '@/services/llm.ts';
+import { checkApiCompleted } from "@/lib/utils";
+import Banner from './components/atoms/banner.tsx';
 
 function App() {
   const {
@@ -31,6 +34,9 @@ function App() {
   const { setTone, setGreetingPrompt, setLogoUrl, setColor, setBrandName, setAiAgentName } = useFormStore();
 
   const [loading, setLoading] = useState(true);
+  const [llmCreationState, setLLMStatus] = useState('');
+  const [showBanner, setBanner] = useState(false);
+  const [timers, setTimers] = useState([]);
   async function fetchBotDetails() {
     const botId = getCurrentBotId();
     const $botDetails = await getBotDetail(botId);
@@ -80,12 +86,34 @@ function App() {
     const payload = await getAiAgentPersona();
     setAiAgentPersona(payload);
   }
-
+  function addTimer(timer:any) {
+    setTimers([timer])
+    console.log('addTimer', timer)
+  }
+  useEffect(() =>{
+    if(llmCreationState === 'IN_PROGRESS'){
+      setBanner(true)
+    }
+  },[llmCreationState])
+  async function startPolling () {
+    try {
+      console.log('polling', timers)
+      timers.forEach((timer:any) => clearTimeout(timer))
+      setTimers([])
+      let status = await checkApiCompleted(llm.getLLMCreationStatus, 10000, addTimer, setLLMStatus)
+      // timers.forEach((timer:any) => clearTimeout(timer))
+      // setTimers([])
+      setLLMStatus(status.status)
+    } catch (e) {
+      setLLMStatus('FAILED')
+    }
+  }
   useEffect(() => {
     fetchBotDetails();
     fetchSocialConfig();
     fetchChatWidgetConfigs();
     fetchAiAgentPersona();
+    startPolling()
   }, []);
 
   useEffect(() => {
@@ -125,20 +153,26 @@ function App() {
   return (
     <>
       {!loading && (
-        <div className={'relative flex h-[100vh] w-full flex-nowrap overflow-hidden'}>
+        <div className='h-full flex flex-col'>
+          {(llmCreationState === 'IN_PROGRESS' || showBanner) &&<Banner spinner body={"LLM Creation in Progress"} showClose={llmCreationState!=='IN_PROGRESS'} onClose = {()=>{
+            console.log('clicked')
+            setBanner(false)
+          }}/>}
+        <div className={'relative flex h-full w-full flex-nowrap overflow-hidden'}>
           <div className={'flex flex-grow flex-col'}>
             <div className="mx-[30px] flex items-center pt-[30px]">
               <Header />
               <StageSelector />
             </div>
             <div className="scale-[0.85] overflow-y-auto">
-              <StageForm />
+              <StageForm startPolling={startPolling}/>
             </div>
           </div>
-          <div className={'flex w-[520px] justify-center overflow-hidden bg-neutral-200 pt-[50px]'}>
+          <div className={'flex w-[520px] h-full justify-center overflow-y-auto bg-neutral-200  items-center'}>
             <ChatWidgetModel />
           </div>
           <Toaster />
+        </div>
         </div>
       )}
       {loading && (
