@@ -31,10 +31,9 @@ function App() {
 
   const { aiAgentPersona, setAiAgentPersona, chatWidgetAppEnv, botDetails, botRefIdStaging, chatWidgetConfig } =
     useAppStore();
-  const { setTone, setGreetingPrompt, setLogoUrl, setColor, setBrandName, setAiAgentName } = useFormStore();
+  const { setTone, setGreetingPrompt, setLogoUrl, setColor, setBrandName, setAiAgentName, llmCreationState, setLLMStatus } = useFormStore();
 
   const [loading, setLoading] = useState(true);
-  const [llmCreationState, setLLMStatus] = useState('');
   const [showBanner, setBanner] = useState(false);
   const [timers, setTimers] = useState([]);
   async function fetchBotDetails() {
@@ -45,7 +44,7 @@ function App() {
       setBotDetails(payload);
       const properties = payload.properties;
       const onboardingStageIndex = parseInt(properties['ONBOARDING_STAGE']?.value);
-      setStage(STAGE_LIST[onboardingStageIndex || 0]);
+      setStage(STAGE_LIST[2]);
     }
   }
 
@@ -101,8 +100,6 @@ function App() {
       timers.forEach((timer:any) => clearTimeout(timer))
       setTimers([])
       let status = await checkApiCompleted(llm.getLLMCreationStatus, 10000, addTimer, setLLMStatus)
-      // timers.forEach((timer:any) => clearTimeout(timer))
-      // setTimers([])
       setLLMStatus(status.status)
     } catch (e) {
       setLLMStatus('FAILED')

@@ -15,6 +15,8 @@ interface FormState {
   setLogoUrl: (data: string) => void;
   setColor: (data: string) => void;
   setGreetingPrompt: (data: string) => void;
+  llmCreationState: string;
+  setLLMStatus: (data: string) => void;
 }
 
 const useFormStore = create<FormState>()(
@@ -57,6 +59,12 @@ const useFormStore = create<FormState>()(
           greetingPrompt: data,
         });
       },
+      llmCreationState: '',
+      setLLMStatus: (data: string) => { 
+        set({
+          llmCreationState: data,
+        });
+      }
     }),
     {
       name: 'form-storage',

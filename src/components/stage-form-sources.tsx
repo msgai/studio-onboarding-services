@@ -12,7 +12,7 @@ import Spinner from './atoms/spinner';
 import { toast } from 'sonner';
 
 export default function StageFormSources({startPolling}:any) {
-  const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone } = useFormStore((state) => state);
+  const { brandName, setBrandName, aiAgentName, setAiAgentName, llmCreationState } = useFormStore((state) => state);
   const [sources, updateSources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [overlayLoading, setOverlayLoading] = useState(false);
@@ -31,9 +31,11 @@ export default function StageFormSources({startPolling}:any) {
     // const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
     // await promise;
     const id = toast.loading('Saving...');
-    const payload = {sources: sources.map(source => ({sourceId: source.sourceId}))}
-    await llm.create(payload)
-    startPolling()
+    if( llmCreationState!=='IN_PROGRESS') {
+      const payload = {sources: sources.map(source => ({sourceId: source.sourceId}))}
+      await llm.create(payload)
+      startPolling()
+    }
     await updateStageData();
     toast.dismiss(id);
     toast.success('Saved');
