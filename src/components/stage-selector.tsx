@@ -11,7 +11,7 @@ export default function StageSelector() {
           <div className={'w-full'} key={stage}>
             <div
               onClick={() => {
-                setStage(stage);
+                // setStage(stage);
               }}
             >
               <StageSelectorItem stage={stage} isCompleted={false} />
