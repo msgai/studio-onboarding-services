@@ -33,7 +33,8 @@ export default function StageFormFallback() {
   }
 
   function openInteractiveTab() {
-    const url = `${window.location.host}/preview?botRefId=${botRefIdStaging}&src=${chatWidgetCdnUrl}`;
+    const cdnUrl = new URL(chatWidgetCdnUrl)
+    const url = `https://${window.location.host}/preview?botRefId=${botRefIdStaging}&src=${cdnUrl.origin}`;
     window.open(url, '_blank');
   }
 
