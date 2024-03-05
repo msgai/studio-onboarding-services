@@ -44,7 +44,7 @@ export async function checkApiCompleted(
         .then((response: any) => {
           const { status } = response.payload;
 
-          if (status === 'IN_PROGRESS') {
+          if (status === 'IN_PROGRESS' || status === 'SENDING_TO_DS') {
             // If status is 'IN_TRAINING', retry after the specified time
             let timer = setTimeout(poll, retryTime);
             setLLMStatus('IN_PROGRESS');
