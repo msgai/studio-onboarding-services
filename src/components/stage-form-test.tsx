@@ -1,11 +1,11 @@
 import React from 'react';
-import { finishOnboarding, updateAiAgentName, updateStage } from '@/services/bots.ts';
+import { finishOnboarding, updateStage } from '@/services/bots.ts';
 import useAppStore from '@/store/appStore.ts';
 import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import { toast } from 'sonner';
 
 export default function StageFormTest() {
-  const { botDetails, setStage } = useAppStore();
+  const { botDetails, setStage, chatWidgetCdnUrl, botRefIdStaging } = useAppStore();
 
   async function updateStageData() {
     const payload = await updateStage({
@@ -23,9 +23,15 @@ export default function StageFormTest() {
   async function handleFormSubmit() {
     const id = toast.loading('Saving...');
     await updateStageData();
+    openInteractiveTab();
     window.location.href = '/';
     toast.dismiss(id);
     toast.success('Saved');
+  }
+
+  function openInteractiveTab() {
+    const url = `${window.location.host}/preview?botRefId=${botRefIdStaging}&src=${chatWidgetCdnUrl}`;
+    window.open(url, '_blank');
   }
 
   return (

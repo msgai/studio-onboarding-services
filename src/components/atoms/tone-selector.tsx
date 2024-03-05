@@ -11,7 +11,6 @@ type Props = OwnProps;
 
 const ToneSelector: FunctionComponent<Props> = ({ value, onChange }) => {
   function onClickHandler(color: string) {
-    console.log('color', color);
     onChange(color);
   }
   return (

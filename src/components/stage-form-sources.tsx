@@ -1,31 +1,59 @@
 import Input from '@/components/atoms/Input.tsx';
 import React, { useEffect, useState } from 'react';
-import {  updateStage } from '@/services/bots.ts';
+import { updateStage } from '@/services/bots.ts';
 import useFormStore from '@/store/formStore.ts';
 import useAppStore from '@/store/appStore.ts';
-import answerai from '@/services/answerAi';
+import answerAi from '@/services/answerAi';
 import llm from '@/services/llm';
-import { STAGE_LIST, STAGES,subTypeConstants } from '@/lib/contants.ts';
 import Table from './atoms/source-table';
 import Spinner from './atoms/spinner';
 import { toast } from 'sonner';
-import { getCurrentBotId, CSVFileReader, excelFileValuesReader } from '@/lib/utils';
+import {
+  getCurrentBotId,
+  getKbKeyPrefix,
+  isValidFileSize,
+  validateCuratedFile,
+  validateCustomFile,
+  validateDOC,
+} from '@/lib/utils';
 import FileUploader from '@/components/atoms/file-uploader';
+import {
+  SOURCE_TYPE,
+  SOURCE_TYPE_LIST,
+  SOURCE_TYPE_LIST_DATA,
+  STAGE_LIST,
+  STAGES,
+  subTypeConstants,
+} from '@/lib/contants.ts';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/atoms/select';
 
-export default function StageFormSources({startPolling}:any) {
-  const { brandName, setBrandName, aiAgentName, setAiAgentName, llmCreationState } = useFormStore((state) => state);
-  const [sources, updateSources] = useState([]);
+export default function StageFormSources({ startPolling }: any) {
+  const { webUrl, setWebUrl, llmCreationState, setShowLoading, sourceName, setSourceName, sourceUrl, setSourceUrl } =
+    useFormStore((state) => state);
   const [loading, setLoading] = useState(true);
-  const [overlayLoading, setOverlayLoading] = useState(false);
-  const { setStage, botDetails } = useAppStore();
-  const [payload, setPayload] = useState({
-    sourceName: '',
-    sourceType: '',
-    fileUrl: '',
-    webUrl: '',
-    subType: subTypeConstants.CUSTOM_KB,
-    botId: getCurrentBotId()
-  })
+  const [sourceType, setSourceType] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
+  const { setStage, botDetails, sources, setSources } = useAppStore();
+  const kbKeyPrefix = getKbKeyPrefix();
+
+  function validateForm() {
+    if (!sourceName) {
+      throw new Error('Source name is required');
+    }
+    if (!sourceType) {
+      throw new Error('Source type is required');
+    }
+    if (sourceType === SOURCE_TYPE.WEB_URL) {
+      if (!webUrl) {
+        throw new Error('Web url is required');
+      }
+    } else {
+      if (!sourceUrl) {
+        throw new Error('Source url is required');
+      }
+    }
+  }
+
   async function updateStageData() {
     const payload = await updateStage({
       stage: STAGES.SOURCES,
@@ -35,178 +63,185 @@ export default function StageFormSources({startPolling}:any) {
       setStage(STAGE_LIST[STAGE_LIST.indexOf(STAGES.SOURCES) + 1]);
     }
   }
+
   async function handleFormSubmit() {
-    // const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
-    // await promise;
     const id = toast.loading('Saving...');
-    if( llmCreationState!=='IN_PROGRESS') {
-      const payload = {sources: sources.map(source => ({sourceId: source.sourceId}))}
-      await llm.create(payload)
-      startPolling()
+    try {
+      setShowLoading(true);
+      if (llmCreationState !== 'IN_PROGRESS') {
+        const payload = { sources: sources.map((source: any) => ({ sourceId: source.sourceId })) };
+        await llm.create(payload);
+        startPolling();
+      }
+      await updateStageData();
+    } catch (e) {
+      toast.error('Something went wrong');
+    } finally {
+      toast.dismiss(id);
+      setShowLoading(false);
     }
-    await updateStageData();
-    toast.dismiss(id);
-    toast.success('Saved');
   }
+
   async function onDelete(source: any) {
     try {
-      setOverlayLoading(true);
-      await answerai.delete(source.sourceId);
-      updateSources(sources.filter((el) => el.sourceId !== source.sourceId));
-      setOverlayLoading(false);
+      setShowLoading(true);
+      await answerAi.delete(source.sourceId);
+      setSources(sources.filter((el: any) => el.sourceId !== source.sourceId));
+      setShowLoading(false);
     } catch (e) {
       console.error(e);
-      setOverlayLoading(false);
+      setShowLoading(false);
     }
   }
-  async function addSource(source: any) {
-    try {
-       console.log(source)
-      setOverlayLoading(true);
-      let payload = {    
-        "botId": getCurrentBotId(),
-        "sourceName": "TESTADD1",
-        "webUrl": "https://netomi.com",
-        "subType": "WEB_URL",
-        "sourceType": "WEB",
-        "isInternal":false,
-        "properties": {
-            "enableArchiveUtility": false
-        }
-    }
-      let res = await answerai.update([payload]);
-      updateSources([...sources, res.payload[0]]);
-      setOverlayLoading(false);
-    } catch (e) {
-      console.error(e);
-      setOverlayLoading(false);
-    }
-  }
-  const kbKeyPrefix = `SETTINGS/KBANSAI/SOURCES/${getCurrentBotId()}/`;
-  const isValidFileSize = (fileObj:any) => {
-    if (fileObj.size > 1024 * 1024 * 20 || fileObj.size === 0) {
-      throw new Error('File size must be smaller than 20mb')
-    }
-    return true
-  }
-  function validateDOC (ext:any) {
-    if (ext === 'doc' || ext === 'docx' || ext === 'pdf') {
-      return true
-    }
-    return false
-  }
-  function validateCustomKBCSV (fileData:any) {
-    if(!(fileData.split('\n').length > 0 && /title,body,html_url/gi.test(fileData.split('\n')[0]))) {
-      throw new Error('Upload Valid file')
-    }
-  }
-  function validateCustomExcel (fileData:any) {
-    console.log(fileData, fileData.length > 1 && /title,body,html_url/gi.test(fileData[1]))
-    if(!(fileData.length > 1 && /title,body,html_url/gi.test(fileData[1]))) {
-      throw new Error('Upload Valid file')
-    }
-  }
-  function validateCuratedCSV (fileData:any) {
-    if(!(fileData.split('\n').length > 0 && /question(?:,display question|\s*),short answer,long answer(?:,source url|\s*)(?:,topic mapped|\s*)(?:,tags|\s*)$/gi.test(fileData.split('\n')[0]))) {
-      throw new Error('Upload Valid file')
-    }
-  }
-  function validateCuratedExcel (fileData:any) {
-    if(!(fileData.length > 1 && /question(?:,display question|\s*),short answer,long answer(?:,source url|\s*)(?:,topic mapped|\s*)(?:,tags|\s*)$/gi.test(fileData[1]))) {
-      throw new Error('Upload Valid file')
-    }
-  }
-  function validateCuratedFile (fileObj:any, fileExt:any) {
-    if (fileExt === 'xlsx') return excelFileValuesReader(fileObj, validateCuratedExcel)
-    else if (fileExt === 'csv') return CSVFileReader(fileObj, validateCuratedCSV)
-    else return false
-  }
-  function validateCustomFile (fileObj:any, fileExt:any) {
-    if (fileExt === 'xlsx') return excelFileValuesReader(fileObj, validateCustomExcel)
-    else if (fileExt === 'csv') return CSVFileReader(fileObj, validateCustomKBCSV)
-    else return false
-  }
+
   const validateFile = async (fileObj: any) => {
     console.log(fileObj.size);
-    console.log(fileObj.raw)
-    let fileExt = fileObj.name && fileObj.name.split('.').pop()
+    console.log(fileObj.raw);
+    let fileExt = fileObj.name && fileObj.name.split('.').pop();
     if (isValidFileSize(fileObj)) {
-      switch (payload.subType) {
+      switch (sourceType) {
         case subTypeConstants.PDF:
         case subTypeConstants.DOC:
-          return validateDOC(fileExt)
+          return validateDOC(fileExt);
         case subTypeConstants.CURATED_FAQ:
-          return validateCuratedFile(fileObj, fileExt)
+          return validateCuratedFile(fileObj, fileExt);
         case subTypeConstants.CUSTOM_KB:
-          return validateCustomFile(fileObj, fileExt)
+          return validateCustomFile(fileObj, fileExt);
       }
     }
   };
-  function onFileUpload(fileUrl:string) {
-    setPayload({...payload, fileUrl: fileUrl})
-  }
+
   useEffect(() => {
     setLoading(true);
-    answerai
+    answerAi
       .getAllSources()
       .then((res: any) => {
-        console.log('Answer', res);
-        updateSources(res.payload);
+        setSources(res.payload);
       })
       .finally(() => {
         setLoading(false);
       });
   }, []);
-  if (loading) return <Spinner />;
+
+  const handleAddSource = async () => {
+    setShowLoading(true);
+    toast.info('Saving');
+    try {
+      validateForm();
+      let payload = {
+        botId: getCurrentBotId(),
+        sourceName: sourceName,
+        webUrl: sourceType === SOURCE_TYPE.WEB_URL ? webUrl : null,
+        fileUrl: sourceType === SOURCE_TYPE.CUSTOM_KB ? sourceUrl : null,
+        subType: sourceType,
+        sourceType: SOURCE_TYPE_LIST_DATA[sourceType].sourceType,
+        isInternal: false,
+        properties: {
+          enableArchiveUtility: sourceType === SOURCE_TYPE.WEB_URL ? isChecked : false,
+        },
+      };
+      let res = await answerAi.update([payload]);
+      setSources([...sources, res?.payload[0]]);
+      toast.success('Saved');
+      setSourceName('');
+      setSourceType('');
+      setWebUrl('');
+      setSourceUrl('');
+      setIsChecked(false);
+    } catch (e) {
+      if (e.message) {
+        toast.error(e.message);
+      } else {
+        toast.error('Something went wrong');
+      }
+    } finally {
+      setShowLoading(false);
+    }
+  };
+
   return (
     <div className={'relative w-full'}>
-      {overlayLoading && (
-        <div className="absolute h-full w-full bg-gray-700 opacity-50	">
-          <div className="absolute left-[50%] top-[50%]">
-            <Spinner />
-          </div>
-        </div>
-      )}
-      <Table data={sources} onDelete={onDelete} />
+      {!loading ? <Table data={sources} onDelete={onDelete} /> : <Spinner />}
       <div>
-        <div className="mb-[10px] mt-[30px] text-lg font-bold leading-none text-white">Source Name</div>
+        <div className="mb-[10px] mt-[30px] text-lg font-bold leading-none text-white">Source Name*</div>
         <Input
-          value={brandName}
+          value={sourceName}
           onChange={(e) => {
-            setBrandName(e.target.value);
+            setSourceName(e.target.value);
           }}
         />
       </div>
       <div>
-        <div className="mb-[10px] mt-[30px] text-lg font-bold leading-none text-white">Source Type</div>
-        <select
-          id="countries"
-          className=" outline-none h-[56px] block w-full rounded-lg border border-gray-300 p-2.5 text-lg leading-none text-gray-500 focus:border-blue-500 focus:ring-blue-500 "
+        <div className="mb-[10px] mt-[30px] text-lg font-bold leading-none text-white">Source Type*</div>
+        <Select
+          value={sourceType}
+          onValueChange={(value) => {
+            setSourceType(value);
+          }}
         >
-          <option selected>Choose a country</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
-        </select>
+          <SelectTrigger className="h-[56px] w-full rounded-lg border border-gray-300 bg-white p-2.5 text-lg leading-none text-gray-500 outline-none focus:border-blue-500 focus:ring-blue-500 ">
+            <SelectValue placeholder="Select" />
+          </SelectTrigger>
+          <SelectContent className={'bg-white'}>
+            {SOURCE_TYPE_LIST.map((sourceType) => (
+              <SelectItem key={sourceType} value={sourceType} className={'cursor-pointer text-zinc-800'}>
+                {SOURCE_TYPE_LIST_DATA[sourceType].label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
-      <div className={'mt-[30px]'}>
-        <div className="mb-[10px] text-lg font-bold leading-none text-white">Web Url</div>
-        <Input
-          placeholder={'What would your chat bot be called?'}
-          value={aiAgentName}
-          onChange={(e) => {
-            setAiAgentName(e.target.value);
-          }}
-        />
+      {sourceType === SOURCE_TYPE.WEB_URL && (
+        <>
+          <div className={'mt-[30px]'}>
+            <div className="mb-[10px] text-lg font-bold leading-none text-white">Web Url*</div>
+            <Input
+              placeholder={'What would your chat bot be called?'}
+              value={webUrl}
+              onChange={(e) => {
+                setWebUrl(e.target.value);
+              }}
+            />
+          </div>
+          <div className={'mt-[30px] flex items-center gap-[8px]'}>
+            <input
+              className={'h-[20px] w-[20px]'}
+              type={'checkbox'}
+              checked={isChecked}
+              onChange={(e) => {
+                setIsChecked(e.target.checked);
+              }}
+            />
+            <div className="text-base font-normal leading-none text-white">
+              Retry with archive.org in case of parsing challenges
+            </div>
+          </div>
+        </>
+      )}
+      {sourceType === SOURCE_TYPE.CUSTOM_KB && (
+        <>
+          <div className={'mt-[30px]'}>
+            <div className="mb-[10px] text-lg font-bold leading-none text-white">Upload File*</div>
+            <FileUploader
+              value={sourceUrl}
+              description=".CSV, .XLSX containing website data"
+              accept=".csv,.xlsx"
+              uploadKeyPrefix={kbKeyPrefix}
+              validateFile={validateFile}
+              onChange={(url: any) => setSourceUrl(url)}
+            />
+          </div>
+        </>
+      )}
+      <div className={'mt-[30px] flex items-center gap-[8px]'}>
+        <button
+          className="h-[56px] w-full rounded border border-solid border-gray-300 bg-white text-lg font-bold leading-none text-indigo-600"
+          onClick={handleAddSource}
+        >
+          Add Source
+        </button>
       </div>
-      <div className={'mt-[30px]'}>
-      <div className="mb-[10px] text-lg font-bold leading-none text-white">Upload File</div>
-        <FileUploader value={payload.fileUrl} description=".CSV, .XLSX containing website data" accept='.csv,.xlsx' uploadKeyPrefix={kbKeyPrefix} validateFile={validateFile} onChange={onFileUpload}/>
-      </div>
-          <button onClick={addSource}> Add Source</button>
-          
-      <div className={'mr-[90px] mt-[50px] flex justify-end'}>
+      <div className={'mt-[50px] flex justify-end'}>
         <button
           className={
             'flex items-center justify-center rounded-full bg-orange-400 px-[40px]  py-[15px] text-lg text-white'

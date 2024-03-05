@@ -29,7 +29,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
         <div className={'mr-[24px]'}>
           <img src={verticalEllipsisIcon} />
         </div>
-        <div className={'mr-[10px] w-[32px]'}>
+        <div className={'mr-[10px] w-[32px] rounded'}>
           <img src={logoUrl || defaultLogo} />
         </div>
         <div className={'mr-[10px] w-[216px] overflow-hidden overflow-ellipsis whitespace-nowrap'}>{brandName}</div>
@@ -46,9 +46,9 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
           <div className={'flex'}>
             <div
               style={{ backgroundColor: color }}
-              className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}
+              className={'mr-[12px] h-[18px] w-[18px] self-start rounded-[5px] bg-gray-100'}
             >
-              <img className="h-[13.6px] w-[13.6px]" src={logoUrl || defaultLogo} style={{ backgroundColor: color }} />
+              <img className="h-full w-full rounded" src={logoUrl || defaultLogo} style={{ backgroundColor: color }} />
             </div>
             <div className="w-[320px] overflow-hidden rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pr-[30px] text-black">
               {greetingPrompt || DEFAULT_GREETING}
@@ -60,9 +60,9 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
           <div className={'flex'}>
             <div
               style={{ backgroundColor: color }}
-              className={'mr-[12px] self-start rounded-[5px] bg-gray-100 p-[4px]'}
+              className={'mr-[12px] h-[18px] w-[18px] self-start rounded-[5px] bg-gray-100'}
             >
-              <img className="h-[13.6px] w-[13.6px]" src={logoUrl || defaultLogo} style={{ backgroundColor: color }} />
+              <img className="h-full w-full rounded" src={logoUrl || defaultLogo} style={{ backgroundColor: color }} />
             </div>
             <div>
               <div className="w-[320px] self-start rounded-[15px] bg-gray-100 py-[20px] pl-[16px] pr-[30px] text-black">

@@ -1,14 +1,13 @@
 import { COLOR_LIST } from '@/lib/contants.ts';
 import { clsx } from 'clsx';
-import pencil from '@/assets/pencil.svg';
 import CustomColorPicker from '@/components/atoms/custom-color-picker.tsx';
+
 interface Props {
   value: string;
   onChange: (value: string) => void;
 }
 export default function ColorPicker({ value, onChange }: Props) {
   function onClickHandler(color: string) {
-    console.log('color', color);
     onChange(color);
   }
 

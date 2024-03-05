@@ -15,6 +15,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     assetsDir: 'onboarding_static',
+    minify: 'terser',
   },
   resolve: {
     alias: {

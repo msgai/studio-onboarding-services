@@ -22,10 +22,6 @@ export async function getPreSignedPostURL(file: File, uploadKeyPrefix: string) {
       method: 'POST',
       headers: {
         ...DEFAULT_HEADERS,
-        // 'x-user-id': JSON.parse(localStorage.getItem('user'))?.id || '0467e4c0-defa-11eb-9d2e-7b4840440f16',
-        // 'x-bot-id': localStorage.getItem('currentBotId') || '5fe5fd10-c110-4f48-b950-82e85edac81e',
-        // 'x-channel': 'NETOMI_WEB_WIDGET',
-        // 'content-type': 'application/json',
       },
       body: JSON.stringify({
         bucket: 'aistudio-cdata',
@@ -62,10 +58,6 @@ export async function putObjectToS3(
       }),
       headers: {
         ...DEFAULT_HEADERS,
-        // 'x-user-id': JSON.parse(localStorage.getItem('user'))?.id || '0467e4c0-defa-11eb-9d2e-7b4840440f16',
-        // 'x-bot-id': localStorage.getItem('currentBotId') || '5fe5fd10-c110-4f48-b950-82e85edac81e',
-        // 'x-channel': 'NETOMI_WEB_WIDGET',
-        // 'content-type': 'application/json',
       },
       credentials: 'include',
     });
@@ -84,16 +76,11 @@ export async function invalidateCache(env: string, path: string) {
       }),
       headers: {
         ...DEFAULT_HEADERS,
-        // 'x-user-id': JSON.parse(localStorage.getItem('user'))?.id || '0467e4c0-defa-11eb-9d2e-7b4840440f16',
-        // 'x-bot-id': localStorage.getItem('currentBotId') || '5fe5fd10-c110-4f48-b950-82e85edac81e',
-        // 'x-channel': 'NETOMI_WEB_WIDGET',
-        // 'content-type': 'application/json',
       },
       credentials: 'include',
     });
     return data.json();
   } catch (error) {
-    console.log('Failed to invalidate cache', error.message);
     throw new Error('Failed to invalidate cache');
   }
 }

@@ -1,6 +1,7 @@
-import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FunctionComponent, useRef, useState } from 'react';
 import { getPreSignedURL } from '../../services/upload';
 import Spinner from './spinner';
+
 export interface OwnProps {
   value?: string;
   onChange?: Function;
@@ -38,7 +39,6 @@ const FileUploader: FunctionComponent<Props> = ({
   // const [value, onChange] = useState(value)
   const ref = useRef(null);
   const loadFile = async (event: any) => {
-    console.log(event, event.target.files);
     setError(null);
     try {
       if (!event.target.files || event.target.files.length === 0) return;
@@ -46,7 +46,6 @@ const FileUploader: FunctionComponent<Props> = ({
       await validateFile(event.target.files[0]);
       let url = await getPreSignedURL(event.target.files[0], uploadKeyPrefix);
       setFile(event.target.files[0].name);
-      console.log(url);
       onChange(url);
     } catch (e) {
       setError(e);

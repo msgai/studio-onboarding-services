@@ -1,17 +1,26 @@
 import Input from '@/components/atoms/Input.tsx';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ToneSelector from '@/components/atoms/tone-selector.tsx';
 import { invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWidget.ts';
 import { updateAiAgentName, updateStage } from '@/services/bots.ts';
 import useFormStore from '@/store/formStore.ts';
 import useAppStore from '@/store/appStore.ts';
-import answerai from '@/services/answerAi';
-import { updateAiAgentPersona, enableBrandTone } from '@/services/aiAgentService.ts';
-import { STAGE_LIST, STAGES, defaultBrandToneSettings } from '@/lib/contants.ts';
+import { enableBrandTone, updateAiAgentPersona } from '@/services/aiAgentService.ts';
+import { defaultBrandToneSettings, STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import { toast } from 'sonner';
 
 export default function StageFormTone() {
-  const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone, defaultSetting, setDefaultSetting } = useFormStore((state) => state);
+  const {
+    brandName,
+    setBrandName,
+    aiAgentName,
+    setAiAgentName,
+    tone,
+    setTone,
+    setShowLoading,
+    defaultSetting,
+    setDefaultSetting,
+  } = useFormStore((state) => state);
   const { setStage, botDetails, chatWidgetConfig, chatWidgetAppEnv, botRefIdStaging, aiAgentPersona } = useAppStore();
 
   async function updateChatWidgetData() {
@@ -26,12 +35,24 @@ export default function StageFormTone() {
     await invalidateCloudfront({ env: chatWidgetAppEnv, botRefId: botRefIdStaging });
   }
 
+  function validateForm() {
+    if (!brandName) {
+      throw new Error('Brand name is required');
+    }
+    if (!aiAgentName) {
+      throw new Error('AI Agent name is required');
+    }
+    if (!tone) {
+      throw new Error('Tone is required');
+    }
+  }
+
   async function updateToneData() {
     let aiAgentPersonaCopy;
-    let method = 'PUT'
-    if(defaultSetting) {
+    let method = 'PUT';
+    if (defaultSetting) {
       aiAgentPersonaCopy = JSON.parse(JSON.stringify(defaultBrandToneSettings));
-      method = 'POST'
+      method = 'POST';
     } else {
       aiAgentPersonaCopy = JSON.parse(JSON.stringify(aiAgentPersona));
     }
@@ -47,8 +68,8 @@ export default function StageFormTone() {
     };
     const payloadString = JSON.stringify(aiAgentPersonaCopy);
     await updateAiAgentPersona(payloadString, method);
-    await enableBrandTone('SANDBOX')
-    setDefaultSetting(false)
+    await enableBrandTone('SANDBOX');
+    setDefaultSetting(false);
   }
 
   async function updateStageData() {
@@ -62,18 +83,24 @@ export default function StageFormTone() {
   }
 
   async function handleFormSubmit() {
-    const id = toast.loading('Saving...');
-    const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
-    await promise;
-    await updateStageData();
-    toast.dismiss(id);
-    toast.success('Saved');
+    setShowLoading(true);
+    toast.info('Saving');
+    try {
+      validateForm();
+      const promise = Promise.all([updateChatWidgetData(), updateAiAgentName(aiAgentName), updateToneData()]);
+      await promise;
+      await updateStageData();
+      toast.success('Saved');
+    } catch (e) {
+      if (e.message) {
+        toast.error(e.message);
+      } else {
+        toast.error('Something went wrong');
+      }
+    } finally {
+      setShowLoading(false);
+    }
   }
-  useEffect(() => {
-    answerai.getAllSources().then((res: any) => {
-      console.log('Answer', res);
-    });
-  }, []);
 
   return (
     <div className={'w-full'}>
@@ -103,7 +130,7 @@ export default function StageFormTone() {
           Informal: Allows casual usage of slang and other phrases
         </div>
       </div>
-      <div className={'mr-[90px] mt-[50px] flex justify-end'}>
+      <div className={'mt-[50px] flex justify-end'}>
         <button
           className={
             'flex items-center justify-center rounded-full bg-orange-400 px-[40px]  py-[15px] text-lg text-white'

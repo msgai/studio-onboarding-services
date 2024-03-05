@@ -2,9 +2,9 @@ import Header from './components/header.tsx';
 import StageSelector from './components/stage-selector.tsx';
 import StageForm from '@/components/stage-form.tsx';
 import ChatWidgetModel from '@/components/chat-widget-model.tsx';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getBotDetail } from '@/services/bots.ts';
-import { STAGE_LIST } from '@/lib/contants.ts';
+import { defaultBrandToneSettings, STAGE_LIST } from '@/lib/contants.ts';
 import useAppStore from '@/store/appStore.ts';
 import Spinner from '@/components/atoms/spinner.tsx';
 import { getConfig, getSocialConfig } from '@/services/app.ts';
@@ -14,9 +14,9 @@ import { getAiAgentPersona } from '@/services/aiAgentService.ts';
 import { getCurrentBotId } from '@/lib/utils.ts';
 import { Toaster } from 'sonner';
 import llm from '@/services/llm.ts';
-import { checkApiCompleted } from "@/lib/utils";
+import { checkApiCompleted } from '@/lib/utils';
 import Banner from './components/atoms/banner.tsx';
-import {defaultBrandToneSettings} from '@/lib/contants.ts'
+
 function App() {
   const {
     setChatWidgetCdnUrl,
@@ -31,7 +31,18 @@ function App() {
 
   const { aiAgentPersona, setAiAgentPersona, chatWidgetAppEnv, botDetails, botRefIdStaging, chatWidgetConfig } =
     useAppStore();
-  const { setTone, setDefaultSetting, setGreetingPrompt, setLogoUrl, setColor, setBrandName, setAiAgentName, llmCreationState, setLLMStatus } = useFormStore();
+  const {
+    setTone,
+    setGreetingPrompt,
+    setLogoUrl,
+    setColor,
+    setBrandName,
+    setAiAgentName,
+    showLoading,
+    llmCreationState,
+    setLLMStatus,
+    setDefaultSetting,
+  } = useFormStore();
 
   const [loading, setLoading] = useState(true);
   const [showBanner, setBanner] = useState(false);
@@ -78,31 +89,29 @@ function App() {
       console.log('Not a valid JSON, error => ', e);
     }
     setChatWidgetConfig(payload);
-    console.log('chatWidgetConfig', payload);
   }
 
   async function fetchAiAgentPersona() {
     const payload = await getAiAgentPersona();
     setAiAgentPersona(payload);
   }
-  function addTimer(timer:any) {
-    setTimers([timer])
-    console.log('addTimer', timer)
+  function addTimer(timer: any) {
+    setTimers([timer]);
   }
-  useEffect(() =>{
-    if(llmCreationState === 'IN_PROGRESS'){
-      setBanner(true)
+  useEffect(() => {
+    if (llmCreationState === 'IN_PROGRESS') {
+      setBanner(true);
     }
-  },[llmCreationState])
-  async function startPolling () {
+  }, [llmCreationState]);
+  async function startPolling() {
     try {
-      console.log('polling', timers)
-      timers.forEach((timer:any) => clearTimeout(timer))
-      setTimers([])
-      let status = await checkApiCompleted(llm.getLLMCreationStatus, 30000, addTimer, setLLMStatus)
-      setLLMStatus(status.status)
+      console.log('polling', timers);
+      timers.forEach((timer: any) => clearTimeout(timer));
+      setTimers([]);
+      let status = await checkApiCompleted(llm.getLLMCreationStatus, 30000, addTimer, setLLMStatus);
+      setLLMStatus(status.status);
     } catch (e) {
-      setLLMStatus('FAILED')
+      setLLMStatus('FAILED');
     }
   }
   useEffect(() => {
@@ -110,12 +119,11 @@ function App() {
     fetchSocialConfig();
     fetchChatWidgetConfigs();
     fetchAiAgentPersona();
-    startPolling()
+    startPolling();
   }, []);
 
   useEffect(() => {
     if (chatWidgetConfig && botDetails && aiAgentPersona) {
-      console.log('botDetails', botDetails, chatWidgetConfig);
       setLoading(false);
     }
   }, [botDetails, chatWidgetConfig, aiAgentPersona]);
@@ -133,11 +141,11 @@ function App() {
       setLogoUrl(chatWidgetConfig.logoImage);
       setBrandName(chatWidgetConfig.title);
       setAiAgentName(botDetails.alias);
-      if(aiAgentPersona.aiAgentPersonaConfig?.communicationTone?.tone) {
+      if (aiAgentPersona.aiAgentPersonaConfig?.communicationTone?.tone) {
         setTone(aiAgentPersona.aiAgentPersonaConfig?.communicationTone?.tone);
       } else {
-        setTone(defaultBrandToneSettings.aiAgentPersonaConfig.communicationTone.tone)
-        setDefaultSetting(true)
+        setTone(defaultBrandToneSettings.aiAgentPersonaConfig.communicationTone.tone);
+        setDefaultSetting(true);
       }
     }
   }, [chatWidgetConfig, botDetails, aiAgentPersona]);
@@ -151,36 +159,50 @@ function App() {
       }
     }
   }, [botDetails]);
- let bannerBody ;
- if(llmCreationState==='FAILED') {
-  bannerBody = 'LLM Creation Failed'
- } else if(llmCreationState==='COMPLETED') {
-  bannerBody = 'LLM Created successfully'
- } else {
-  bannerBody = 'LLM Creation in Progress'
- }
+  let bannerBody;
+  if (llmCreationState === 'FAILED') {
+    bannerBody = 'LLM Creation Failed';
+  } else if (llmCreationState === 'COMPLETED') {
+    bannerBody = 'LLM Created successfully';
+  } else {
+    bannerBody = 'LLM Creation in Progress';
+  }
   return (
     <>
       {!loading && (
-        <div className='h-full flex flex-col'>
-          {(llmCreationState === 'IN_PROGRESS' || showBanner) &&<Banner spinner={llmCreationState==='IN_PROGRESS'} body={bannerBody} showClose={llmCreationState!=='IN_PROGRESS'} onClose = {()=>{
-            setBanner(false)
-          }}/>}
-        <div className={'relative flex h-full w-full flex-nowrap overflow-hidden'}>
-          <div className={'flex flex-grow flex-col'}>
-            <div className="mx-[30px] flex items-center pt-[30px]">
-              <Header />
-              <StageSelector />
+        <div className="flex h-full flex-col">
+          {(llmCreationState === 'IN_PROGRESS' || showBanner) && (
+            <Banner
+              spinner={llmCreationState === 'IN_PROGRESS'}
+              body={bannerBody}
+              showClose={llmCreationState !== 'IN_PROGRESS'}
+              onClose={() => {
+                setBanner(false);
+              }}
+            />
+          )}
+          <div className={'relative flex h-full w-full flex-nowrap overflow-hidden'}>
+            <div className={'flex flex-grow flex-col'}>
+              <div className="mx-[30px] flex w-full items-center justify-center pt-[30px]">
+                <Header />
+                <StageSelector />
+              </div>
+              <div className="scale-[0.85] overflow-y-auto">
+                <StageForm startPolling={startPolling} />
+              </div>
             </div>
-            <div className="scale-[0.85] overflow-y-auto">
-              <StageForm startPolling={startPolling}/>
+            <div className={'flex h-full w-[520px] items-center justify-center overflow-y-auto  bg-neutral-200'}>
+              <ChatWidgetModel />
             </div>
+            <Toaster />
+            {showLoading && (
+              <div className="absolute h-full w-full bg-gray-700 opacity-50	">
+                <div className="absolute left-[50%] top-[50%]">
+                  <Spinner />
+                </div>
+              </div>
+            )}
           </div>
-          <div className={'flex w-[520px] h-full justify-center overflow-y-auto bg-neutral-200  items-center'}>
-            <ChatWidgetModel />
-          </div>
-          <Toaster />
-        </div>
         </div>
       )}
       {loading && (

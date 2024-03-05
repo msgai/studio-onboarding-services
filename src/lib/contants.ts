@@ -61,7 +61,23 @@ export const TONE_LIST_DATA = {
 
 export const TONE_LIST = [TONE.FRIENDLY, TONE.PROFESSIONAL];
 
-// export const TONE_LIST = ['FRIENDLY', 'Professional'];
+export enum SOURCE_TYPE {
+  WEB_URL = 'WEB_URL',
+  CUSTOM_KB = 'CUSTOM_KB',
+}
+
+export const SOURCE_TYPE_LIST_DATA = {
+  [SOURCE_TYPE.WEB_URL]: {
+    label: 'Web URL',
+    sourceType: 'WEB',
+  },
+  [SOURCE_TYPE.CUSTOM_KB]: {
+    label: 'Custom KB',
+    sourceType: 'FILE',
+  },
+};
+
+export const SOURCE_TYPE_LIST = [SOURCE_TYPE.WEB_URL, SOURCE_TYPE.CUSTOM_KB];
 export const subTypeConstants = {
   CUSTOM_KB: 'CUSTOM_KB',
   CURATED_FAQ: 'CURATED_FAQ',
@@ -70,20 +86,20 @@ export const subTypeConstants = {
   WEB_URL: 'WEB_URL',
   ZENDESK_KB_JSON: 'ZENDESK_KB_JSON',
   ONLINE_PDF: 'ONLINE_PDF',
-  SITE_MAP: 'SITE_MAP'
-}
+  SITE_MAP: 'SITE_MAP',
+};
 export const defaultBrandToneSettings = {
   botId: 'SYSTEM',
   aiAgentPersonaConfig: {
     communicationTone: {
-      tone: 'PROFESSIONAL'
+      tone: 'PROFESSIONAL',
     },
     responseFormat: {
       formatType: 'AUTO',
-      formatDescription: ''
+      formatDescription: '',
     },
     responseLength: {
-      contentDepth: 'AUTO'
-    }
-  }
-}
+      contentDepth: 'AUTO',
+    },
+  },
+};

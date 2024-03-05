@@ -1,16 +1,24 @@
 import { create } from 'zustand';
-import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import { COLOR_LIST } from '@/lib/contants.ts';
+import { createJSONStorage, devtools } from 'zustand/middleware';
+import { COLOR_LIST, SOURCE_TYPE } from '@/lib/contants.ts';
 
 interface FormState {
+  showLoading: boolean;
   greetingPrompt: string;
   color: string;
   logoUrl: string;
   brandName: string;
   aiAgentName: string;
   tone: string;
+  sourceName: string;
+  sourceType: SOURCE_TYPE;
+  sourceUrl: string;
+  setSourceUrl: (data: string) => void;
+  setSourceType: (data: SOURCE_TYPE) => void;
+  setSourceName: (data: string) => void;
+  setShowLoading: (data: boolean) => void;
   defaultSetting: boolean;
-  setDefaultSetting:(data: boolean) => void;
+  setDefaultSetting: (data: boolean) => void;
   setTone: (data: string) => void;
   setAiAgentName: (data: string) => void;
   setBrandName: (data: string) => void;
@@ -19,6 +27,8 @@ interface FormState {
   setGreetingPrompt: (data: string) => void;
   llmCreationState: string;
   setLLMStatus: (data: string) => void;
+  webUrl: string;
+  setWebUrl: (data: string) => void;
 }
 
 const useFormStore = create<FormState>()(
@@ -31,13 +41,43 @@ const useFormStore = create<FormState>()(
       brandName: '',
       aiAgentName: '',
       tone: '',
-      defaultSetting:false,
+      showLoading: false,
+      sourceName: '',
+      sourceType: null,
+      sourceUrl: '',
+      webUrl: '',
+      setWebUrl: (data: string) => {
+        set({
+          webUrl: data,
+        });
+      },
+      setSourceUrl: (data: string) => {
+        set({
+          sourceUrl: data,
+        });
+      },
+      setSourceType: (data: SOURCE_TYPE) => {
+        set({
+          sourceType: data,
+        });
+      },
+      setSourceName: (data: string) => {
+        set({
+          sourceName: data,
+        });
+      },
+      setShowLoading: (data: boolean) => {
+        set({
+          showLoading: data,
+        });
+      },
+      defaultSetting: false,
       setTone: (data: string) => {
         set({
           tone: data,
         });
       },
-      setDefaultSetting: (data: boolean)=>{
+      setDefaultSetting: (data: boolean) => {
         set({
           defaultSetting: data,
         });
@@ -68,11 +108,11 @@ const useFormStore = create<FormState>()(
         });
       },
       llmCreationState: '',
-      setLLMStatus: (data: string) => { 
+      setLLMStatus: (data: string) => {
         set({
           llmCreationState: data,
         });
-      }
+      },
     }),
     {
       name: 'form-storage',

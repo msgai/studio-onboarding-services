@@ -1,31 +1,42 @@
 import React from 'react';
-import { updateStage } from '@/services/bots.ts';
+import { finishOnboarding, updateStage } from '@/services/bots.ts';
 import useAppStore from '@/store/appStore.ts';
 import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import { toast } from 'sonner';
 import Input from '@/components/atoms/Input.tsx';
-import ColorPicker from '@/components/atoms/color-picker.tsx';
-import FileUploader from '@/components/atoms/file-uploader.tsx';
 
 export default function StageFormFallback() {
-  const { botDetails, setStage } = useAppStore();
+  const { botDetails, setStage, chatWidgetCdnUrl, botRefIdStaging } = useAppStore();
 
   async function updateStageData() {
     const payload = await updateStage({
       stage: STAGES.FALLBACK,
       botDetails: botDetails,
     });
+    await finishOnboarding({
+      botDetails,
+    });
     if (payload?.statusCode === 'SUCCESS') {
-      setStage(STAGE_LIST[STAGE_LIST.indexOf(STAGES.FALLBACK) + 1]);
+      setStage(STAGE_LIST[STAGE_LIST.indexOf(STAGES.FALLBACK)]);
     }
   }
 
   async function handleFormSubmit() {
     const id = toast.loading('Saving...');
     await updateStageData();
+    openInteractiveTab();
+
+    window.location.href = '/';
+
     toast.dismiss(id);
     toast.success('Saved');
   }
+
+  function openInteractiveTab() {
+    const url = `${window.location.host}/preview?botRefId=${botRefIdStaging}&src=${chatWidgetCdnUrl}`;
+    window.open(url, '_blank');
+  }
+
   return (
     <div className={'w-full'}>
       <div className="h-full pb-[50px]">
@@ -34,10 +45,10 @@ export default function StageFormFallback() {
           <Input placeholder={'Thank you for reaching out to us, please create a Support ticket at netomi.com.'} />
         </div>
       </div>
-      <div className={'mr-[90px] mt-[50px] flex scale-[1.25] justify-end'}>
+      <div className={'mt-[50px] flex justify-end'}>
         <button
           className={
-            'flex items-center justify-center rounded-full bg-orange-400 px-[32px] py-[12px] text-sm text-white'
+            'flex items-center justify-center rounded-full bg-orange-400 px-[40px]  py-[15px] text-lg text-white'
           }
           onClick={handleFormSubmit}
         >

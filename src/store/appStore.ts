@@ -1,8 +1,10 @@
 import { create } from 'zustand';
-import { createJSONStorage, devtools, persist } from 'zustand/middleware';
+import { createJSONStorage, devtools } from 'zustand/middleware';
 import { STAGES } from '@/lib/contants.ts';
 
 interface AppState {
+  sources: any;
+  setSources: (data: any) => void;
   botDetails: any;
   currentStage: STAGES;
   socialConfig: any;
@@ -36,6 +38,12 @@ const useAppStore = create<AppState>()(
       botRefIdStaging: '',
       botRefIdProduction: '',
       aiAgentPersona: null,
+      sources: [],
+      setSources: (data: any) => {
+        set({
+          sources: data,
+        });
+      },
       setAiAgentPersona: (data: any) => {
         set({
           aiAgentPersona: data,

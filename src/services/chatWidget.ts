@@ -1,4 +1,4 @@
-import { getUserEmailFromLocalStorage, getUserIdFromLocalStorage } from '@/lib/utils.ts';
+import { getUserEmailFromLocalStorage } from '@/lib/utils.ts';
 import DEFAULT_HEADERS from '@/services/setDefaultHeaders.ts';
 
 export async function getChatWidgetDetails({ env, botRefId }: { env: string; botRefId: string }) {
@@ -10,12 +10,6 @@ export async function getChatWidgetDetails({ env, botRefId }: { env: string; bot
     }),
     headers: {
       ...DEFAULT_HEADERS,
-      // 'X-BOT-ID': botId,
-      // 'X-Channel': 'NETOMI_WEB_WIDGET',
-      // 'X-Service-Desk': 'NETOMI_WEB_WIDGET',
-      // 'X-User-ID': userId,
-      // env: 'LIVE',
-      // 'content-type': 'application/json',
     },
     credentials: 'include',
   });
@@ -43,12 +37,6 @@ export async function updateChatWidgetDetails({
     }),
     headers: {
       ...DEFAULT_HEADERS,
-      // 'X-BOT-ID': botId,
-      // 'X-Channel': 'NETOMI_WEB_WIDGET',
-      // 'X-Service-Desk': 'NETOMI_WEB_WIDGET',
-      // 'X-User-ID': userId,
-      // env: 'LIVE',
-      // 'content-type': 'application/json',
     },
     credentials: 'include',
   });
@@ -64,12 +52,6 @@ export async function invalidateCloudfront({ env, botRefId }: { env: string; bot
     }),
     headers: {
       ...DEFAULT_HEADERS,
-      // 'X-BOT-ID': botId,
-      // 'X-Channel': 'NETOMI_WEB_WIDGET',
-      // 'X-Service-Desk': 'NETOMI_WEB_WIDGET',
-      // 'X-User-ID': userId,
-      // env: 'LIVE',
-      // 'content-type': 'application/json',
     },
     credentials: 'include',
   });
