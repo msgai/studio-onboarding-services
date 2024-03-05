@@ -9,6 +9,8 @@ interface FormState {
   brandName: string;
   aiAgentName: string;
   tone: string;
+  defaultSetting: boolean;
+  setDefaultSetting:(data: boolean) => void;
   setTone: (data: string) => void;
   setAiAgentName: (data: string) => void;
   setBrandName: (data: string) => void;
@@ -29,9 +31,15 @@ const useFormStore = create<FormState>()(
       brandName: '',
       aiAgentName: '',
       tone: '',
+      defaultSetting:false,
       setTone: (data: string) => {
         set({
           tone: data,
+        });
+      },
+      setDefaultSetting: (data: boolean)=>{
+        set({
+          defaultSetting: data,
         });
       },
       setAiAgentName: (data: string) => {

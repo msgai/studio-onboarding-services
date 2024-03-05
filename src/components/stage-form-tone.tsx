@@ -6,12 +6,12 @@ import { updateAiAgentName, updateStage } from '@/services/bots.ts';
 import useFormStore from '@/store/formStore.ts';
 import useAppStore from '@/store/appStore.ts';
 import answerai from '@/services/answerAi';
-import { updateAiAgentPersona } from '@/services/aiAgentService.ts';
-import { STAGE_LIST, STAGES } from '@/lib/contants.ts';
+import { updateAiAgentPersona, enableBrandTone } from '@/services/aiAgentService.ts';
+import { STAGE_LIST, STAGES, defaultBrandToneSettings } from '@/lib/contants.ts';
 import { toast } from 'sonner';
 
 export default function StageFormTone() {
-  const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone } = useFormStore((state) => state);
+  const { brandName, setBrandName, aiAgentName, setAiAgentName, tone, setTone, defaultSetting, setDefaultSetting } = useFormStore((state) => state);
   const { setStage, botDetails, chatWidgetConfig, chatWidgetAppEnv, botRefIdStaging, aiAgentPersona } = useAppStore();
 
   async function updateChatWidgetData() {
@@ -27,7 +27,14 @@ export default function StageFormTone() {
   }
 
   async function updateToneData() {
-    let aiAgentPersonaCopy = JSON.parse(JSON.stringify(aiAgentPersona));
+    let aiAgentPersonaCopy;
+    let method = 'PUT'
+    if(defaultSetting) {
+      aiAgentPersonaCopy = JSON.parse(JSON.stringify(defaultBrandToneSettings));
+      method = 'POST'
+    } else {
+      aiAgentPersonaCopy = JSON.parse(JSON.stringify(aiAgentPersona));
+    }
     aiAgentPersonaCopy = {
       ...aiAgentPersonaCopy,
       aiAgentPersonaConfig: {
@@ -39,7 +46,9 @@ export default function StageFormTone() {
       },
     };
     const payloadString = JSON.stringify(aiAgentPersonaCopy);
-    await updateAiAgentPersona(payloadString);
+    await updateAiAgentPersona(payloadString, method);
+    await enableBrandTone('SANDBOX')
+    setDefaultSetting(false)
   }
 
   async function updateStageData() {

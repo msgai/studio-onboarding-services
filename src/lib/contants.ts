@@ -72,3 +72,18 @@ export const subTypeConstants = {
   ONLINE_PDF: 'ONLINE_PDF',
   SITE_MAP: 'SITE_MAP'
 }
+export const defaultBrandToneSettings = {
+  botId: 'SYSTEM',
+  aiAgentPersonaConfig: {
+    communicationTone: {
+      tone: 'PROFESSIONAL'
+    },
+    responseFormat: {
+      formatType: 'AUTO',
+      formatDescription: ''
+    },
+    responseLength: {
+      contentDepth: 'AUTO'
+    }
+  }
+}

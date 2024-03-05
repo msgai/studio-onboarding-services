@@ -16,7 +16,7 @@ import { Toaster } from 'sonner';
 import llm from '@/services/llm.ts';
 import { checkApiCompleted } from "@/lib/utils";
 import Banner from './components/atoms/banner.tsx';
-
+import {defaultBrandToneSettings} from '@/lib/contants.ts'
 function App() {
   const {
     setChatWidgetCdnUrl,
@@ -31,7 +31,7 @@ function App() {
 
   const { aiAgentPersona, setAiAgentPersona, chatWidgetAppEnv, botDetails, botRefIdStaging, chatWidgetConfig } =
     useAppStore();
-  const { setTone, setGreetingPrompt, setLogoUrl, setColor, setBrandName, setAiAgentName, llmCreationState, setLLMStatus } = useFormStore();
+  const { setTone, setDefaultSetting, setGreetingPrompt, setLogoUrl, setColor, setBrandName, setAiAgentName, llmCreationState, setLLMStatus } = useFormStore();
 
   const [loading, setLoading] = useState(true);
   const [showBanner, setBanner] = useState(false);
@@ -99,7 +99,7 @@ function App() {
       console.log('polling', timers)
       timers.forEach((timer:any) => clearTimeout(timer))
       setTimers([])
-      let status = await checkApiCompleted(llm.getLLMCreationStatus, 10000, addTimer, setLLMStatus)
+      let status = await checkApiCompleted(llm.getLLMCreationStatus, 30000, addTimer, setLLMStatus)
       setLLMStatus(status.status)
     } catch (e) {
       setLLMStatus('FAILED')
@@ -133,7 +133,12 @@ function App() {
       setLogoUrl(chatWidgetConfig.logoImage);
       setBrandName(chatWidgetConfig.title);
       setAiAgentName(botDetails.alias);
-      setTone(aiAgentPersona.aiAgentPersonaConfig?.communicationTone?.tone);
+      if(aiAgentPersona.aiAgentPersonaConfig?.communicationTone?.tone) {
+        setTone(aiAgentPersona.aiAgentPersonaConfig?.communicationTone?.tone);
+      } else {
+        setTone(defaultBrandToneSettings.aiAgentPersonaConfig.communicationTone.tone)
+        setDefaultSetting(true)
+      }
     }
   }, [chatWidgetConfig, botDetails, aiAgentPersona]);
 
@@ -146,13 +151,19 @@ function App() {
       }
     }
   }, [botDetails]);
-
+ let bannerBody ;
+ if(llmCreationState==='FAILED') {
+  bannerBody = 'LLM Creation Failed'
+ } else if(llmCreationState==='COMPLETED') {
+  bannerBody = 'LLM Created successfully'
+ } else {
+  bannerBody = 'LLM Creation in Progress'
+ }
   return (
     <>
       {!loading && (
         <div className='h-full flex flex-col'>
-          {(llmCreationState === 'IN_PROGRESS' || showBanner) &&<Banner spinner body={"LLM Creation in Progress"} showClose={llmCreationState!=='IN_PROGRESS'} onClose = {()=>{
-            console.log('clicked')
+          {(llmCreationState === 'IN_PROGRESS' || showBanner) &&<Banner spinner={llmCreationState==='IN_PROGRESS'} body={bannerBody} showClose={llmCreationState!=='IN_PROGRESS'} onClose = {()=>{
             setBanner(false)
           }}/>}
         <div className={'relative flex h-full w-full flex-nowrap overflow-hidden'}>
