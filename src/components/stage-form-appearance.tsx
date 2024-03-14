@@ -40,6 +40,7 @@ export default function StageFormAppearance() {
       chatWidgetConfigCopy.initialFlows.header = greetingPrompt;
       chatWidgetConfigCopy.theme.color = color;
       chatWidgetConfigCopy.logoImage = logoUrl;
+      console.log(chatWidgetConfigCopy, 'ccc')
       const payloadString = JSON.stringify(chatWidgetConfigCopy);
       await updateChatWidgetDetails({
         env: chatWidgetAppEnv,

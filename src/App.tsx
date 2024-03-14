@@ -44,7 +44,7 @@ function App() {
     setDefaultSetting,
   } = useFormStore();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showBanner, setBanner] = useState(false);
   const [timers, setTimers] = useState([]);
   async function fetchBotDetails() {
@@ -119,7 +119,7 @@ function App() {
     fetchSocialConfig();
     fetchChatWidgetConfigs();
     fetchAiAgentPersona();
-    startPolling();
+    // startPolling();
   }, []);
 
   useEffect(() => {

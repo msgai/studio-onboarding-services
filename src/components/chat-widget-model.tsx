@@ -17,7 +17,7 @@ const DEFAULT_GREETING = 'Hello! Welcome to AeroSkyline Airlines customer suppor
 
 const ChatWidgetModel: FunctionComponent<Props> = () => {
   const { greetingPrompt, color, logoUrl, brandName } = useFormStore((state) => state);
-
+  console.log(greetingPrompt, color, logoUrl, brandName)
   return (
     <div className={'h-[699px] w-[419px] scale-[.85] overflow-auto rounded-[20px] bg-white'}>
       <div

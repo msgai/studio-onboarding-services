@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import moment from 'moment-timezone';
+import { TIME_ZONE_LIST } from './timezoneConstants';
 import * as Excel from 'exceljs';
 
 export function getUserIdFromLocalStorage() {
@@ -206,4 +208,36 @@ export function validateCustomFile(fileObj: any, fileExt: any) {
   if (fileExt === 'xlsx') return excelFileValuesReader(fileObj, validateCustomExcel);
   else if (fileExt === 'csv') return CSVFileReader(fileObj, validateCustomKBCSV);
   else return false;
+}
+
+export function generateTimeZones() {
+  console.log('GENERATE GENERATE')
+  return moment.tz
+    .names()
+    .filter((tz: string) => {
+      return TIME_ZONE_LIST.includes(tz);
+    })
+    .reduce((memo, tz) => {
+      const timerDiff = moment.tz(tz).utcOffset() ? moment.tz(tz).format('Z') : '';
+      memo.push({
+        name: tz,
+        label: `(GMT${timerDiff}) ${tz}`,
+        value: `${timerDiff}[${tz}]`,
+      });
+      return memo;
+    }, [])
+    .sort((a, b) => {
+      return a.value - b.value;
+    });
+}
+
+export function getHoursInADay() {
+  const hoursInADay = 24;
+  const hours = [];
+
+  for (let i = 0; i < hoursInADay; i++) {
+    hours.push(i <= 9 ? `0${i}:00` : `${i}:00`);
+  }
+
+  return hours;
 }

@@ -73,3 +73,31 @@ export async function updateAiAgentName(data: string) {
   const payload = await response.json();
   return payload;
 }
+
+export async function updateBot(botDetails: Record<string, any>) {
+  const botId = getCurrentBotId();
+  const response = await fetch(`/api/resources/bots/${botId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ ...botDetails, id: botId }),
+    headers: {
+      ...DEFAULT_HEADERS,
+    },
+    credentials: 'include',
+  });
+  const payload = await response.json();
+  return payload;
+}
+
+export async function updateQuickSightOperatingHours(botDetails: Record<string, any>) {
+  const botId = getCurrentBotId();
+  const response = await fetch(`/api/quicksight/operatingHours/${botId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ ...botDetails, id: botId }),
+    headers: {
+      ...DEFAULT_HEADERS,
+    },
+    credentials: 'include',
+  });
+  const payload = await response.json();
+  return payload;
+}
