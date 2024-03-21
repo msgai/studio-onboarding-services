@@ -5,7 +5,7 @@ import { invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWi
 import { updateAiAgentName, updateStage } from '@/services/bots.ts';
 import useFormStore from '@/store/formStore.ts';
 import useAppStore from '@/store/appStore.ts';
-import { enableBrandTone, updateAiAgentPersona } from '@/services/aiAgentService.ts';
+import { enableAnswerGpt, enableBrandTone, updateAiAgentPersona, updateEnableDisableSettings } from '@/services/aiAgentService.ts';
 import { defaultBrandToneSettings, STAGE_LIST, STAGES } from '@/lib/contants.ts';
 import { toast } from 'sonner';
 
@@ -68,7 +68,8 @@ export default function StageFormTone() {
     };
     const payloadString = JSON.stringify(aiAgentPersonaCopy);
     await updateAiAgentPersona(payloadString, method);
-    await enableBrandTone('SANDBOX');
+    await Promise.all([enableBrandTone('SANDBOX'), updateEnableDisableSettings('SANDBOX')])
+    await enableAnswerGpt('SANDBOX')
     setDefaultSetting(false);
   }
 
