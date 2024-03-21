@@ -5,8 +5,13 @@ import { invalidateCloudfront, updateChatWidgetDetails } from '@/services/chatWi
 import { updateAiAgentName, updateStage } from '@/services/bots.ts';
 import useFormStore from '@/store/formStore.ts';
 import useAppStore from '@/store/appStore.ts';
-import { enableAnswerGpt, enableBrandTone, updateAiAgentPersona, updateEnableDisableSettings } from '@/services/aiAgentService.ts';
-import { defaultBrandToneSettings, STAGE_LIST, STAGES } from '@/lib/contants.ts';
+import {
+  enableAnswerGpt,
+  enableBrandTone,
+  updateAiAgentPersona,
+  updateEnableDisableSettings,
+} from '@/services/aiAgentService.ts';
+import { defaultBrandToneSettings, STAGE_LIST, STAGES, FORM_FIELDS_VALIDATION } from '@/lib/contants.ts';
 import { toast } from 'sonner';
 
 export default function StageFormTone() {
@@ -68,8 +73,8 @@ export default function StageFormTone() {
     };
     const payloadString = JSON.stringify(aiAgentPersonaCopy);
     await updateAiAgentPersona(payloadString, method);
-    await Promise.all([enableBrandTone('SANDBOX'), updateEnableDisableSettings('SANDBOX')])
-    await enableAnswerGpt('SANDBOX')
+    await Promise.all([enableBrandTone('SANDBOX'), updateEnableDisableSettings('SANDBOX')]);
+    await enableAnswerGpt('SANDBOX');
     setDefaultSetting(false);
   }
 
@@ -112,7 +117,9 @@ export default function StageFormTone() {
           onChange={(e) => {
             setBrandName(e.target.value);
           }}
+          maxLength={FORM_FIELDS_VALIDATION.BRAND_LENGTH}
         />
+        <p className="mt-1 text-right text-white">Max {FORM_FIELDS_VALIDATION.BRAND_LENGTH} characters</p>
       </div>
       <div className={'mt-[30px]'}>
         <div className="mb-[10px] text-lg font-bold leading-none text-white">AI Agent Name</div>
@@ -122,7 +129,9 @@ export default function StageFormTone() {
           onChange={(e) => {
             setAiAgentName(e.target.value);
           }}
+          maxLength={FORM_FIELDS_VALIDATION.AI_AGENT_NAME_LENGTH}
         />
+        <p className="mt-1 text-right text-white">Max {FORM_FIELDS_VALIDATION.AI_AGENT_NAME_LENGTH} characters</p>
       </div>
       <div className={'mt-[30px]'}>
         <div className="mb-[10px] text-lg font-bold leading-none text-white">Formality of Tone</div>
