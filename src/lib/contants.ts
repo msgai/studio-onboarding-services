@@ -103,3 +103,8 @@ export const defaultBrandToneSettings = {
     },
   },
 };
+
+export const FORM_FIELDS_VALIDATION = {
+  BRAND_LENGTH: 30,
+  AI_AGENT_NAME_LENGTH: 64,
+};

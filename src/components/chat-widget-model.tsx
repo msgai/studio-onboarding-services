@@ -41,12 +41,14 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
         </div>
       </div>
 
-      <div className={'chat-widget-content relative mt-[-64px] h-full px-[16px] pt-[180px]'}>
+      <div className={'chat-widget-content relative mt-[-64px] h-full px-[16px] pt-[180px] flex justify-between flex-col'}>
         <div className={'chat-widget-body mt-[90px] flex flex-col gap-y-[16px]'}>
           <div className={'flex'}>
             <div
               style={{ backgroundColor: color }}
-              className={'mr-[12px] h-[18px] w-[18px] self-start rounded-[5px] bg-gray-100'}
+              className={
+                'mr-[12px] flex h-[24px] w-[24px] items-center justify-center self-start rounded-[5px] bg-gray-100 p-1'
+              }
             >
               <img className="h-full w-full rounded" src={logoUrl || defaultLogo} style={{ backgroundColor: color }} />
             </div>
@@ -60,7 +62,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
           <div className={'flex'}>
             <div
               style={{ backgroundColor: color }}
-              className={'mr-[12px] h-[18px] w-[18px] self-start rounded-[5px] bg-gray-100'}
+              className="mr-[12px] flex h-[24px] w-[24px] items-center justify-center self-start rounded-[5px] bg-gray-100 p-1"
             >
               <img className="h-full w-full rounded" src={logoUrl || defaultLogo} style={{ backgroundColor: color }} />
             </div>
@@ -76,7 +78,7 @@ const ChatWidgetModel: FunctionComponent<Props> = () => {
           </div>
         </div>
 
-        <div className={'chat-widget-footer absolute bottom-[28px] flex items-center'}>
+        <div className={'chat-widget-footer sticky bottom-[28px] flex items-center'}>
           <div className={'mr-[12px] px-[8px]'}>
             <img src={reloadIcon} />
           </div>

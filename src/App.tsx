@@ -4,7 +4,7 @@ import StageForm from '@/components/stage-form.tsx';
 import ChatWidgetModel from '@/components/chat-widget-model.tsx';
 import React, { useEffect, useState } from 'react';
 import { getBotDetail } from '@/services/bots.ts';
-import { defaultBrandToneSettings, STAGE_LIST } from '@/lib/contants.ts';
+import { COLOR_LIST, defaultBrandToneSettings, STAGE_LIST } from '@/lib/contants.ts';
 import useAppStore from '@/store/appStore.ts';
 import Spinner from '@/components/atoms/spinner.tsx';
 import { getConfig, getSocialConfig } from '@/services/app.ts';
@@ -108,7 +108,7 @@ function App() {
       console.log('polling', timers);
       timers.forEach((timer: any) => clearTimeout(timer));
       setTimers([]);
-      let status = await checkApiCompleted(llm.getLLMCreationStatus, 30000, addTimer, setLLMStatus);
+      const status = await checkApiCompleted(llm.getLLMCreationStatus, 30000, addTimer, setLLMStatus);
       setLLMStatus(status.status);
     } catch (e) {
       setLLMStatus('FAILED');
@@ -137,7 +137,7 @@ function App() {
   useEffect(() => {
     if (chatWidgetConfig && botDetails && aiAgentPersona) {
       setGreetingPrompt(chatWidgetConfig.initialFlows?.header);
-      setColor(chatWidgetConfig.theme?.color);
+      setColor(chatWidgetConfig.theme?.color || COLOR_LIST[0]);
       setLogoUrl(chatWidgetConfig.logoImage);
       setBrandName(chatWidgetConfig.title);
       setAiAgentName(botDetails.alias);
